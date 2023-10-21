@@ -1,10 +1,10 @@
 import React from 'react'
 import './App.css'
 
+
 const Questions = ({ questions, start }) => {
 
-
-    const [selectedAnswer, setSelectedAnswer] = React.useState(Array(questions.length).fill(null))
+    /*  Answers state for storing all the shuffled answer*/
     const [answers, setAnswers] = React.useState([[]]);
 
 
@@ -13,38 +13,48 @@ const Questions = ({ questions, start }) => {
             shuffleArray([...q.incorrect_answers, q.correct_answer])
         );
 
+        console.log(shuffledAnswers)
+
+        /*Updating answer state with shuffled answer */
+
         setAnswers(shuffledAnswers);
+        console.log(answers)
     }, [questions]);
 
+    /*ShuffleArray function for Shuffling correct and incorrect answers */
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
+        console.log(array + ': function')
         return array;
+
+
     }
+
+    /* removing select from every answer options with same class  */
     function resetAllOptionsFilter(allOptions) {
         for (let options of allOptions) {
             options.classList.remove("select")
         }
     }
+    /*  selecting  answer options with answer id */
 
     function updateSelectStyle(element) {
         element.classList.add('select')
     }
 
+    /*Handling selected answers  */
     function handleSelect(e, questionIndex) {
         const resetAllOptions = document.getElementsByClassName(questionIndex)
         resetAllOptionsFilter(resetAllOptions)
         const selectedElementId = e.target.id
         const selectedElement = document.getElementById(selectedElementId)
         updateSelectStyle(selectedElement)
-
-        const updatedSelectedAnswer = [...selectedAnswer]
-        updatedSelectedAnswer[questionIndex] = selectedElementId
-        setSelectedAnswer(updatedSelectedAnswer)
-
     }
+
+
     const quizQuestions = questions.map((question, questionIndex) => {
 
 
@@ -56,7 +66,7 @@ const Questions = ({ questions, start }) => {
             <div className='quizes' key={questionIndex}>
                 <h3>{question.question}</h3>
                 <div className='answers-div'>
-                    {answers.map((answer, index) => {
+                    {answers[questionIndex].map((answer, index) => {
                         return <button
                             key={index}
                             id={answer}
@@ -69,18 +79,18 @@ const Questions = ({ questions, start }) => {
             </div>
         )
     })
-    function checkAnswers() {
+    /*function checkAnswers() {
 
         questions.forEach((question, index) => {
 
 
 
         })
-    }
+    }*/
     return (
         <div className='quiz-div'>
             {quizQuestions}
-            {start && < button className='check-btn' onClick={checkAnswers}>Check Answer</button>}
+            {start && < button className='check-btn' /*onClick={checkAnswers}*/>Check Answer</button>}
         </div>
     )
 }
