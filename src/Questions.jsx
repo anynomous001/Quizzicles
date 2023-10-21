@@ -54,31 +54,33 @@ const Questions = ({ questions, start }) => {
         updateSelectStyle(selectedElement)
     }
 
+    let quizQuestions;
 
-    const quizQuestions = questions.map((question, questionIndex) => {
+    if (questions.length) {
+        quizQuestions = questions.map((question, questionIndex) => {
 
-
-        /*   const answers = shuffleArray([...question.incorrect_answers, question.correct_answer]);*/
-
-
-
-        return (
-            <div className='quizes' key={questionIndex}>
-                <h3>{question.question}</h3>
-                <div className='answers-div'>
-                    {answers[questionIndex].map((answer, index) => {
-                        return <button
-                            key={index}
-                            id={answer}
-                            onClick={(e) => handleSelect(e, questionIndex, answer)}
-                            className={`${questionIndex} answer_span`}
-                        >{answer}</button>
-                    })}
+            /*   const answers = shuffleArray([...question.incorrect_answers, question.correct_answer]);*/
+            return (
+                <div className='quizes' key={questionIndex}>
+                    <h3>{question.question}</h3>
+                    <div className='answers-div'>
+                        {answers[questionIndex].map((answer, index) => {
+                            return <button
+                                key={index}
+                                id={answer}
+                                onClick={(e) => handleSelect(e, questionIndex, answer)}
+                                className={`${questionIndex} answer_span`}
+                            >{answer}</button>
+                        })}
+                    </div>
+                    <hr></hr>
                 </div>
-                <hr></hr>
-            </div>
-        )
-    })
+            )
+        })
+    } else {
+        quizQuestions = <h1>Loading</h1>
+    }
+
     /*function checkAnswers() {
 
         questions.forEach((question, index) => {

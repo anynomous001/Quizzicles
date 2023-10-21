@@ -10,7 +10,7 @@ function App() {
   const [questions, setQuestions] = React.useState([])
 
   function click() {
-    fetch('https://opentdb.com/api.php?amount=1&category=21&difficulty=medium&type=multiple')
+    fetch('https://opentdb.com/api.php?amount=5&category=21&difficulty=medium&type=multiple')
       .then(res => res.json())
       .then(data => {
         setQuestions(data.results)
@@ -31,6 +31,7 @@ function App() {
         </div>
         <div className='quiz-setup'>
           <Questions questions={questions} start={start} />
+
         </div>
 
 
