@@ -5,7 +5,7 @@ import './App.css'
 const Questions = ({ questions, start }) => {
 
     /*  Answers state for storing all the shuffled answer*/
-    const [answers, setAnswers] = React.useState([[]]);
+    const [answers, setAnswers] = React.useState([]);
 
 
     React.useEffect(() => {
@@ -27,7 +27,6 @@ const Questions = ({ questions, start }) => {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
         }
-        console.log(array + ': function')
         return array;
 
 
@@ -64,7 +63,7 @@ const Questions = ({ questions, start }) => {
                 <div className='quizes' key={questionIndex}>
                     <h3>{question.question}</h3>
                     <div className='answers-div'>
-                        {answers[questionIndex].map((answer, index) => {
+                        {answers[questionIndex]?.map((answer, index) => {
                             return <button
                                 key={index}
                                 id={answer}
@@ -77,8 +76,6 @@ const Questions = ({ questions, start }) => {
                 </div>
             )
         })
-    } else {
-        quizQuestions = <h1>Loading</h1>
     }
 
     /*function checkAnswers() {
@@ -91,7 +88,7 @@ const Questions = ({ questions, start }) => {
     }*/
     return (
         <div className='quiz-div'>
-            {quizQuestions}
+            {start && quizQuestions}
             {start && < button className='check-btn' /*onClick={checkAnswers}*/>Check Answer</button>}
         </div>
     )
