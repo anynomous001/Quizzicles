@@ -96,7 +96,7 @@ const Questions = ({ questions, start }) => {
                             return <button
                                 key={index}
                                 id={answer}
-                                onClick={(e) => handleSelect(questionIndex, answer)}
+                                onClick={() => handleSelect(questionIndex, answer)}
                                 className={`${questionIndex} answer_span  ${selectedAnswers[questionIndex] === answer ? 'select' : ''}  `}
                             >{answer}</button>
                         })}
@@ -110,8 +110,13 @@ const Questions = ({ questions, start }) => {
     function checkAnswers() {
         setToggle(true)
         questions.forEach((question, index) => {
+
             const userAnswer = selectedAnswers[index]
-            console.log(document.getElementById(question.correct_answer).classList.add('correct'))
+
+            document.getElementById(question.correct_answer).classList.add('correct')
+
+
+
 
             if (userAnswer !== undefined) {
                 if (question.correct_answer === userAnswer) {
@@ -129,7 +134,7 @@ const Questions = ({ questions, start }) => {
         <div className='quiz-div'>
             {start && quizQuestions}
             {start && < button className='check-btn' onClick={checkAnswers}>Check Answer</button>}
-            {toggle && <h3>you got {correctCount}/{questions.length} correct Answers</h3>}
+            {toggle && <h3 className='score-msg'>You got <span className='score'>{correctCount}/{questions.length}</span> Correct Answers</h3>}
         </div>
     )
 }

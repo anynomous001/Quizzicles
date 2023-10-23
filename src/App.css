@@ -149,13 +149,29 @@ hr {
   background-color: #D6DBF5;
 }
 
-.correct {
+.fade{
+  opacity: .7;
+    transition: none;
+    transform: none;
+}
+.answers-div  .correct {
   background: rgba(157, 230, 157, 0.493);
   border: none;
   color:#293264a8;
   font-weight: 800;
 }
 
+.score-msg{
+  text-align: center;
+  width: 100%;
+  padding: 1rem;
+    color: #293264;
+    font-size: 1.5rem;
+}
+
+.score{
+  color: rgba(255, 0, 0, 0.425);
+}
 .wrong {
   background: rgba(255, 0, 0, 0.521);
   border: none;
