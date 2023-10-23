@@ -150,11 +150,18 @@ hr {
 }
 
 .correct {
-  background: green;
+  background: rgba(157, 230, 157, 0.493);
+  border: none;
+  color:#293264a8;
+  font-weight: 800;
 }
 
 .wrong {
-  background: red;
+  background: rgba(255, 0, 0, 0.521);
+  border: none;
+  color:#293264a8;
+  font-weight: 800;
+  
 }
 
 .check-btn {
@@ -170,6 +177,7 @@ hr {
   min-width: 9em;
   margin: 2em;
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+  
 }
 
 .check-btn:hover {
@@ -179,4 +187,11 @@ hr {
 
 .check-btn:active {
   transform: scale(0.92);
+}
+
+.check-btn:disabled{
+  opacity: .7;
+  transition: none;
+  transform: none;
+  cursor: not-allowed;
 }

@@ -6,7 +6,8 @@ const Questions = ({ questions, start }) => {
 
     /*  Answers state for storing all the shuffled answer*/
     const [answers, setAnswers] = React.useState([]);
-    const [selectedAnswers, setSelectedAnswers] = React.useState({ qIndex: null, useranswer: null })
+    /*const [selectedAnswers, setSelectedAnswers] = React.useState({ qIndex: null, useranswer: null })*/
+    const [selectedAnswers, setSelectedAnswers] = React.useState(Array(questions.length).fill(null))
     const [correctCount, setCorrectCount] = React.useState(0)
     const [toggle, setToggle] = React.useState(false)
 
@@ -33,26 +34,26 @@ const Questions = ({ questions, start }) => {
     }
 
     /* removing select from every answer options with same class  */
-    function resetAllOptionsFilter(allOptions) {
-        for (let options of allOptions) {
-            options.classList.remove("select")
-        }
-    }
-    /*  selecting  answer options with answer id */
+    /* function resetAllOptionsFilter(allOptions) {
+         for (let options of allOptions) {
+             options.classList.remove("select")
+         }
+     }
+     /*  selecting  answer options with answer id */
 
-    function updateSelectStyle(element) {
-        element.classList.add('select')
-    }
+    /* function updateSelectStyle(element) {
+         element.classList.add('select')
+     }*/
 
     /*Handling selected answers  */
-    function handleSelect(e, questionIndex) {
-        const resetAllOptions = document.getElementsByClassName(questionIndex)
+    function handleSelect(questionIndex, selectedElementId) {
+        /*const resetAllOptions = document.getElementsByClassName(questionIndex)
         resetAllOptionsFilter(resetAllOptions)
         const selectedElementId = e.target.id
         const selectedElement = document.getElementById(selectedElementId)
-        updateSelectStyle(selectedElement)
+        updateSelectStyle(selectedElement)*/
 
-        setSelectedAnswers((prev) => {
+        /*setSelectedAnswers((prev) => {
             if (prev !== null) {
                 return {
                     ...prev,
@@ -63,8 +64,21 @@ const Questions = ({ questions, start }) => {
                     [questionIndex]: selectedElementId,
                 };
             }
-        });
+        });*/
+        setSelectedAnswers((prevAnswers) => {
+            if (prevAnswers) {
+                return {
+                    ...prevAnswers,
+                    [questionIndex]: selectedElementId,
+                }
+            } else {
+                return {
+                    [questionIndex]: selectedElementId,
+                }
+            }
 
+
+        })
 
     }
 
@@ -82,8 +96,8 @@ const Questions = ({ questions, start }) => {
                             return <button
                                 key={index}
                                 id={answer}
-                                onClick={(e) => handleSelect(e, questionIndex, answer)}
-                                className={`${questionIndex} answer_span`}
+                                onClick={(e) => handleSelect(questionIndex, answer)}
+                                className={`${questionIndex} answer_span  ${selectedAnswers[questionIndex] === answer ? 'select' : ''}  `}
                             >{answer}</button>
                         })}
                     </div>
@@ -94,21 +108,20 @@ const Questions = ({ questions, start }) => {
     }
 
     function checkAnswers() {
-        console.log(selectedAnswers)
         setToggle(true)
         questions.forEach((question, index) => {
             const userAnswer = selectedAnswers[index]
-            document.getElementById(question.correct_answer).style.backgroundColor = 'green'
+            console.log(document.getElementById(question.correct_answer).classList.add('correct'))
 
             if (userAnswer !== undefined) {
                 if (question.correct_answer === userAnswer) {
                     setCorrectCount(correctCount + 1);
                 } else if (question.correct_answer !== userAnswer) {
-                    document.getElementById(userAnswer).style.backgroundColor = 'red'
+                    document.getElementById(userAnswer).classList.add('wrong')
                 }
             }
 
-
+            document.getElementsByClassName('check-btn')[0].disabled = true
 
         })
     }
@@ -116,7 +129,7 @@ const Questions = ({ questions, start }) => {
         <div className='quiz-div'>
             {start && quizQuestions}
             {start && < button className='check-btn' onClick={checkAnswers}>Check Answer</button>}
-            {toggle && <h3>you got {correctCount}/5 correct Answers</h3>}
+            {toggle && <h3>you got {correctCount}/{questions.length} correct Answers</h3>}
         </div>
     )
 }
