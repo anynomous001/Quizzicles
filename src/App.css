@@ -246,3 +246,37 @@ cursor: pointer;
 .btn{
   display: none;
 }
+
+.level,.category{
+  width: 90%;
+  padding: 0.5em;
+  text-align: center;
+  top: -2px;
+background:#d6dbf548;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.3rem;
+  color: #293264;
+    transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.level:hover,.category:hover{
+  /*box-shadow: 0 0 10px rgba(255, 255, 255,
+  0.5), inset 0 0 10px rgba(255, 255, 255
+  , 0.5);*/
+  box-shadow: 0 0 10px rgba(255, 255, 255,
+  0.5), inset 0 0 10px rgba(255, 255, 255
+  , 0.5);
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.level :active,.category:active{
+  transform: scale(0.92);
+  border: none;
+}
+.label-difficulty,.label-category{
+  font-size: 1.5rem;
+  margin: 1rem 0;
+  font-family: 'Roboto', sans-serif;
+  color: #4D5B9E;
+}

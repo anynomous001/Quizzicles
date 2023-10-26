@@ -1,7 +1,40 @@
 import React from 'react'
 import './App.css'
 
+/**<form>
+            <p className='label-category' >Select Category :</p>
+            <select id='category' className='category' name="category">
+              <option value='9'>Entertainment: Books</option>
+              <option value='10'>Entertainment: Film</option>
+              <option value='11'>Entertainment: Music</option>
+              <option value='12'>Entertainment: Musicals & Theatres</option>
+              <option value='13'>Entertainment: Television</option>
+              <option value='14'>Entertainment: Video Games</option>
+              <option value='15'>Entertainment: Board Games</option>
+              <option value='16'>Science & Nature</option>
+              <option value='17'>Science: Computers</option>
+              <option value='18'>Science: Mathematics</option>
+              <option value='19'>Mythology</option>
+              <option value='20'>Sports</option>
+              <option value='21'>Geography</option>
+              <option value='22'>History</option>
+              <option value='23'>Politics</option>
+              <option value='24'>Art</option>
+              <option value='25'>Celebrities</option>
+              <option value='26'>Animals</option>
+              <option value='27'>Entertainment: Comics</option>
+              <option value='28'>Science: Gadgets</option>
+              <option value='29'>Entertainment: Japanese Anime & Manga</option>
+              <option value='30'>Entertainment: Cartoon & Animations</option>
+            </select>
 
+            <p className='label-difficulty' >Select Difficulty :</p>
+            <select id="level" className='level' name="level">
+              <option value='easy'>Easy</option>
+              <option value='medium'>Medium</option>
+              <option value='hard'>Hard</option>
+            </select>
+          </form> */
 const Questions = ({ questions, start, setStart }) => {
 
     /*  Answers state for storing all the shuffled answer*/
