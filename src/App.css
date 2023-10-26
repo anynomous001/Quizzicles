@@ -211,3 +211,12 @@ hr {
   transform: none;
   cursor: not-allowed;
 }
+
+.answer_span:disabled{
+  color: rgba(32, 28, 28, 0.897) !important;
+  background-color: rgba(128, 128, 128, 0.37);
+  opacity: .5;
+  transform: none;
+  border-color: #2932645e;
+}
+

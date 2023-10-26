@@ -108,28 +108,37 @@ const Questions = ({ questions, start }) => {
     }
 
     function checkAnswers() {
-        setToggle(true)
+        setToggle(true);
+
         questions.forEach((question, index) => {
+            const userAnswer = selectedAnswers[index];
+            const correctAnswerId = question.correct_answer;
 
-            const userAnswer = selectedAnswers[index]
-
-            document.getElementById(question.correct_answer).classList.add('correct')
-
-
-
+            // Add the 'correct' class to the correct answer
+            document.getElementById(correctAnswerId).classList.add('correct');
 
             if (userAnswer !== undefined) {
-                if (question.correct_answer === userAnswer) {
+                if (correctAnswerId === userAnswer) {
                     setCorrectCount(correctCount + 1);
-                } else if (question.correct_answer !== userAnswer) {
-                    document.getElementById(userAnswer).classList.add('wrong')
+                } else {
+                    // Add the 'wrong' class to the user's wrong answer
+                    document.getElementById(userAnswer).classList.add('wrong');
                 }
             }
 
-            document.getElementsByClassName('check-btn')[0].disabled = true
+            // Disable all options except the correct answer and the user's answer
+            answers[index].forEach((answer) => {
+                if (answer !== correctAnswerId && answer !== userAnswer) {
+                    document.getElementById(answer).disabled = true;
+                }
+            });
 
-        })
+            // Disable the 'Check Answer' button after checking
+            document.getElementsByClassName('check-btn')[0].disabled = true;
+        });
     }
+
+
     return (
         <div className='quiz-div'>
             {start && quizQuestions}
