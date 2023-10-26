@@ -193,7 +193,30 @@ hr {
   min-width: 9em;
   margin: 2em;
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+}
+.play-again-btn{
+  background: #293264;
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.8rem;
+  border: 1.5px solid #293264;
+  border-radius: 1em;
+  padding: 1em;
+  align-self: center;
+  text-align: center;
+  color: aliceblue;
+  min-width: 9em;
+  margin: 2em;
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+
   
+}
+
+.play-again-btn:hover{
+transform: scale(1.05);
+cursor: pointer;
+}
+.play-again-btn:active{
+  transform: scale(0.92);
 }
 
 .check-btn:hover {
@@ -205,12 +228,12 @@ hr {
   transform: scale(0.92);
 }
 
-.check-btn:disabled{
+/*.check-btn:disabled{
   opacity: .7;
   transition: none;
   transform: none;
   cursor: not-allowed;
-}
+}*/
 
 .answer_span:disabled{
   color: rgba(32, 28, 28, 0.897) !important;
@@ -220,3 +243,6 @@ hr {
   border-color: #2932645e;
 }
 
+.btn{
+  display: none;
+}

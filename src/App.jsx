@@ -30,7 +30,7 @@ function App() {
         </div>
 
         <div className="quiz-setup">
-          <Questions questions={questions} start={start} />
+          <Questions questions={questions} start={start} setStart={setStart} />
         </div>
       </div>
     </div>

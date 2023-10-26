@@ -2,7 +2,7 @@ import React from 'react'
 import './App.css'
 
 
-const Questions = ({ questions, start }) => {
+const Questions = ({ questions, start, setStart }) => {
 
     /*  Answers state for storing all the shuffled answer*/
     const [answers, setAnswers] = React.useState([]);
@@ -10,6 +10,7 @@ const Questions = ({ questions, start }) => {
     const [selectedAnswers, setSelectedAnswers] = React.useState(Array(questions.length).fill(null))
     const [correctCount, setCorrectCount] = React.useState(0)
     const [toggle, setToggle] = React.useState(false)
+    const [restart, setRestart] = React.useState(false)
 
     React.useEffect(() => {
         const shuffledAnswers = questions.map(q =>
@@ -109,7 +110,7 @@ const Questions = ({ questions, start }) => {
 
     function checkAnswers() {
         setToggle(true);
-
+        setRestart(true)
         questions.forEach((question, index) => {
             const userAnswer = selectedAnswers[index];
             const correctAnswerId = question.correct_answer;
@@ -134,15 +135,21 @@ const Questions = ({ questions, start }) => {
             });
 
             // Disable the 'Check Answer' button after checking
-            document.getElementsByClassName('check-btn')[0].disabled = true;
         });
     }
-
+    function playAgain() {
+        setStart(false)
+        setRestart(false)
+        setToggle(false)
+    }
 
     return (
         <div className='quiz-div'>
             {start && quizQuestions}
-            {start && < button className='check-btn' onClick={checkAnswers}>Check Answer</button>}
+            {restart ?
+                < button className={`play-again-btn ${start ? '' : 'btn'}`} onClick={playAgain}>Play Again</button>
+                : < button className={`check-btn ${start ? '' : 'btn'}`} onClick={checkAnswers}>Check Answer</button>
+            }
             {toggle && <h3 className='score-msg'>You got <span className='score'>{correctCount}/{questions.length}</span> Correct Answers</h3>}
         </div>
     )
