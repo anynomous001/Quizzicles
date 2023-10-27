@@ -9,7 +9,7 @@
 
 .app {
   background-color: #F5F7FB;
-  height: 100vh;
+  height: auto;
   width: 100%;
   position: relative;
  
@@ -89,6 +89,7 @@ margin-top: 10em;
 
 .start-btn:hover { 
   cursor: pointer;
+  background-color: #4d5b9ecc;
   transform: scale(1.05);
 }
 
@@ -258,13 +259,14 @@ cursor: pointer;
 
 .level,.category{
   width: 70%;
-  padding: 0.5em;
+  padding:1em 0.5em;
   text-align: center;
   top: -2px;
-background:#d6dbf548;
+  border-radius: 6px;
+background:#d6dbf5d0;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #293264;
     transition: transform 0.1s ease-in-out;
 }
