@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 
-/**<form>
+/**
             <p className='label-category' >Select Category :</p>
             <select id='category' className='category' name="category">
               <option value='9'>Entertainment: Books</option>
@@ -34,7 +34,7 @@ import './App.css'
               <option value='medium'>Medium</option>
               <option value='hard'>Hard</option>
             </select>
-          </form> */
+           */
 const Questions = ({ questions, start, setStart }) => {
 
     /*  Answers state for storing all the shuffled answer*/
