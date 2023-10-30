@@ -5,9 +5,19 @@ import Questions from './Questions';
 
 async function fetchQuestions(category, level) {
 
-  const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
-  const data = await res.json();
-  return data.results;
+  try {
+    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=555&difficulty=${level}&type=multiple`);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`)
+    }
+    const data = await res.json();
+    return data.results;
+  } catch (error) {
+    console.error('An error occurred:', error);
+    return null
+  }
+
 }
 
 
@@ -26,10 +36,36 @@ function App() {
     const level = formdata.get('level')
 
     const questions = await fetchQuestions(category, level);
+    console.log(questions)
     setQuestions(questions);
     setStart(true);
   };
 
+  const options = [
+    { value: '9', label: 'General Knowledge' },
+    { value: '10', label: 'Entertainment: Books' },
+    { value: '11', label: 'Entertainment: Film' },
+    { value: '12', label: 'Entertainment: Music' },
+    { value: '13', label: 'Entertainment: Musicals & Theatres' },
+    { value: '14', label: 'Entertainment: Television' },
+    { value: '15', label: 'Entertainment: Video Games' },
+    { value: '16', label: 'Entertainment: Board Games' },
+    { value: '17', label: 'Science & Nature' },
+    { value: '18', label: 'Science: Computers' },
+    { value: '19', label: 'Science: Mathematics' },
+    { value: '20', label: 'Mythology' },
+    { value: '21', label: 'Sports' },
+    { value: '22', label: 'Geography' },
+    { value: '23', label: 'History' },
+    { value: '24', label: 'Politics' },
+    { value: '25', label: 'Art' },
+    { value: '26', label: 'Celebrities' },
+    { value: '27', label: 'Animals' },
+    { value: '28', label: 'Entertainment: Comics' },
+    { value: '29', label: 'Science: Gadgets' },
+    { value: '30', label: 'Entertainment: Japanese Anime & Manga' },
+    { value: '31', label: 'Entertainment: Cartoon & Animations' }
+  ];
 
 
   return (
@@ -40,29 +76,13 @@ function App() {
           <form id='quiz-form' onSubmit={(e) => getQuestions(e)}>
             <p className='label-category' >Select Category :</p>
             <select id='category' className='category' name="category">
-              <option value='9'>General Knowledge</option>
-              <option value='10'>Entertainment: Books</option>
-              <option value='11'>Entertainment: Film</option>
-              <option value='12'>Entertainment: Music</option>
-              <option value='13'>Entertainment: Musicals & Theatres</option>
-              <option value='14'>Entertainment: Television</option>
-              <option value='15'>Entertainment: Video Games</option>
-              <option value='16'>Entertainment: Board Games</option>
-              <option value='17'>Science & Nature</option>
-              <option value='18'>Science: Computers</option>
-              <option value='19'>Science: Mathematics</option>
-              <option value='20'>Mythology</option>
-              <option value='21'>Sports</option>
-              <option value='22'>Geography</option>
-              <option value='23'>History</option>
-              <option value='24'>Politics</option>
-              <option value='25'>Art</option>
-              <option value='26'>Celebrities</option>
-              <option value='27'>Animals</option>
-              <option value='28'>Entertainment: Comics</option>
-              <option value='29'>Science: Gadgets</option>
-              <option value='30'>Entertainment: Japanese Anime & Manga</option>
-              <option value='31'>Entertainment: Cartoon & Animations</option>
+              {options.map((option) => {
+                return (
+                  <option value={option.value}>{option.label}</option>
+
+                )
+              })}
+
             </select>
 
 

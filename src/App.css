@@ -44,7 +44,7 @@
   place-items: center;
   width: auto;
   background-color: #d6dbf562;
-  border :black solid 1px
+  border: black solid 1px
 }
 
 .start-container {
@@ -52,7 +52,7 @@
   width: 70%;
   height: 80%;
   z-index: 2;
-margin-top: 10em;
+  margin-top: 10em;
 }
 
 .start-container h1 {
@@ -81,7 +81,7 @@ margin-top: 10em;
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
 }
 
-.start-btn:hover { 
+.start-btn:hover {
   cursor: pointer;
   background-color: #4d5b9ecc;
   transform: scale(1.05);
@@ -149,39 +149,41 @@ hr {
 
 
 
-.select{
+.select {
   background-color: #D6DBF5;
 }
 
-.fade{
+.fade {
   opacity: .7;
-    transition: none;
-    transform: none;
+  transition: none;
+  transform: none;
 }
-.answers-div  .correct {
+
+.answers-div .correct {
   background: rgba(157, 230, 157, 0.493);
   border: none;
-  color:#293264a8;
+  color: #293264a8;
   font-weight: 800;
 }
 
-.score-msg{
+.score-msg {
   text-align: center;
   width: 100%;
   padding: 1rem;
-    color: #293264;
-    font-size: 1.5rem;
+  color: #293264;
+  font-size: 1.5rem;
 }
 
-.score{
+.score {
   color: rgba(255, 0, 0, 0.425);
 }
+
 .wrong {
   background: rgba(255, 0, 0, 0.521);
   border: none;
-  color:#293264a8;
+  color: #293264a8;
   font-weight: 800;
-  
+
 }
 
 .check-btn {
@@ -198,7 +200,8 @@ hr {
   margin: 2em;
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
 }
-.play-again-btn{
+
+.play-again-btn {
   background: #293264;
   font-family: 'Roboto', sans-serif;
   font-size: 0.8rem;
@@ -212,14 +215,15 @@ hr {
   margin: 2em;
   transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
 
-  
+
 }
 
-.play-again-btn:hover{
-transform: scale(1.05);
-cursor: pointer;
+.play-again-btn:hover {
+  transform: scale(1.05);
+  cursor: pointer;
 }
-.play-again-btn:active{
+
+.play-again-btn:active {
   transform: scale(0.92);
 }
 
@@ -239,7 +243,7 @@ cursor: pointer;
   cursor: not-allowed;
 }*/
 
-.answer_span:disabled{
+.answer_span:disabled {
   color: rgba(32, 28, 28, 0.897) !important;
   background-color: rgba(128, 128, 128, 0.37);
   opacity: .5;
@@ -247,43 +251,50 @@ cursor: pointer;
   border-color: #2932645e;
 }
 
-.btn{
+.btn {
   display: none;
 }
 
-.level,.category{
+.level,
+.category {
   width: 70%;
-  padding:1em 0.5em;
+  padding: 1em 0.5em;
   text-align: center;
   top: -2px;
   border-radius: 6px;
-background:#d6dbf5d0;
+  background: #d6dbf5d0;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
   font-size: 1.1rem;
   color: #293264;
-    transition: transform 0.1s ease-in-out;
+  transition: transform 0.1s ease-in-out;
 }
 
-.level:hover,.category:hover{
+.level:hover,
+.category:hover {
   /*box-shadow: 0 0 10px rgba(255, 255, 255,
   0.5), inset 0 0 10px rgba(255, 255, 255
   , 0.5);*/
   box-shadow: 0 0 10px rgba(255, 255, 255,
-  0.5), inset 0 0 10px rgba(255, 255, 255
-  , 0.5);
+      0.5), inset 0 0 10px rgba(255, 255, 255, 0.5);
   transform: scale(1.05);
   cursor: pointer;
 }
 
-.level:active,.category:active{
+.level:active,
+.category:active {
   transform: scale(0.92);
   border: none;
 }
-.label-difficulty,.label-category{
+
+.label-difficulty,
+.label-category {
   font-size: 1.5rem;
   margin: 1.2rem 0;
   font-family: 'Roboto', sans-serif;
-  color: #4D5B9E; 
+  color: #4D5B9E;
 }
 
+.fail-msg {
+  color: #293264
+}
