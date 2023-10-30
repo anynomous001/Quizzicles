@@ -1,38 +1,24 @@
 import React from 'react'
 import './App.css'
+import { nanoid } from 'nanoid';
 
 
 const Questions = ({ questions, start, setStart }) => {
 
     /*  Answers state for storing all the shuffled answer*/
-    const [answers, setAnswers] = React.useState([]);
     /*const [selectedAnswers, setSelectedAnswers] = React.useState({ qIndex: null, useranswer: null })*/
     const [selectedAnswers, setSelectedAnswers] = React.useState(Array(questions.length).fill(null))
     const [correctCount, setCorrectCount] = React.useState(0)
     const [toggle, setToggle] = React.useState(false)
     const [restart, setRestart] = React.useState(false)
 
-    React.useEffect(() => {
-        const shuffledAnswers = questions.map(q =>
-            shuffleArray([...q.incorrect_answers, q.correct_answer])
-        );
+
+    console.log(questions)
 
 
-        /*Updating answer state with shuffled answer */
-
-        setAnswers(shuffledAnswers);
-    }, [questions]);
 
     /*ShuffleArray function for Shuffling correct and incorrect answers */
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
 
-
-    }
 
 
     function handleSelect(questionIndex, selectedElementId) {
@@ -62,10 +48,10 @@ const Questions = ({ questions, start, setStart }) => {
                 <div className='quizes' key={questionIndex}>
                     <h3>{question.question}</h3>
                     <div className='answers-div'>
-                        {answers[questionIndex]?.map((answer, index) => {
+                        {question.answers[questionIndex]?.map((answer, index) => {
                             return <button
                                 key={index}
-                                id={answer}
+                                id={nanoid()}
                                 onClick={() => handleSelect(questionIndex, answer)}
                                 className={`${questionIndex} answer_span  ${selectedAnswers[questionIndex] === answer ? 'select' : ''}  `}
                             >{answer}</button>
