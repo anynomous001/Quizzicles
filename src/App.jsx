@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
 import Questions from './Questions';
+import { nanoid } from 'nanoid';
 
 
 async function fetchQuestions(category, level) {
 
   try {
-    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=555&difficulty=${level}&type=multiple`);
+    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
 
     if (!res.ok) {
       throw new Error(`HTTP error! Status: ${res.status}`)
@@ -23,7 +24,7 @@ async function fetchQuestions(category, level) {
 
 function App() {
 
-  const [questions, setQuestions] = React.useState([]);
+  const [quizQuestions, setQuizQuestions] = React.useState([]);
   const [start, setStart] = React.useState(false);
 
   const getQuestions = async (e) => {
@@ -35,9 +36,30 @@ function App() {
     const category = formdata.get('category')
     const level = formdata.get('level')
 
+
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
     const questions = await fetchQuestions(category, level);
-    console.log(questions)
-    setQuestions(questions);
+
+    setQuizQuestions(() => {
+      return questions.map((question) => {
+        return {
+          question: question.question,
+          id: nanoid(),
+          correctAnswer: question.correct_answer,
+          answers: shuffleArray([...question.incorrect_answers, question.correct_answer])
+        }
+      })
+
+    });
+    console.log(quizQuestions)
     setStart(true);
   };
 
@@ -99,7 +121,7 @@ function App() {
         </div>
 
         <div className="quiz-setup">
-          <Questions questions={questions} start={start} setStart={setStart} />
+          <Questions questions={quizQuestions} start={start} setStart={setStart} />
         </div>
       </div>
     </div>
