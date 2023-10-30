@@ -17,7 +17,14 @@ const Questions = ({ questions, start, setStart }) => {
 
 
 
-    /*ShuffleArray function for Shuffling correct and incorrect answers */
+    /*ShuffleArray function for Shuffling correct and incorrect answers
+    
+answers: (4) ['Notebook', 'Money', 'Watch', 'Keys']
+correctAnswer: "Watch"
+id: "SX9AnH7pckZXpCr2zeJiy"
+question: "In past times, what would a gentleman keep in his fob pocket?"
+
+    */
 
 
 
@@ -48,7 +55,7 @@ const Questions = ({ questions, start, setStart }) => {
                 <div className='quizes' key={questionIndex}>
                     <h3>{question.question}</h3>
                     <div className='answers-div'>
-                        {question.answers[questionIndex]?.map((answer, index) => {
+                        {question.answers?.map((answer, index) => {
                             return <button
                                 key={index}
                                 id={nanoid()}
