@@ -6,7 +6,7 @@ import Questions from './Questions';
 async function fetchQuestions(category, level) {
 
   try {
-    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=555&difficulty=${level}&type=multiple`);
+    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
 
     if (!res.ok) {
       throw new Error(`HTTP error! Status: ${res.status}`)
