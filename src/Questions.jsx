@@ -49,6 +49,48 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
     }
     let quizQuestions;
 
+    // Early return statements are super useful to perform conditional rendering
+    // It can make your code much more simple and easier to read
+    // If you use typescript, it will also helps you with type narrowing
+    // eg.:
+    /**
+     * const data: null | Error | string // <-- this only means, that the data can be `NULL` and `ERROR` or a `STRING` 
+     * 
+     * // We can narrow the types down using `if` or `switch` statement (I will use if for our demonstration)
+     * 
+     * // The type of `data` at the moment is ---> null | Error | string
+     * 
+     * if (data instanceOf Error) {
+     *      // The type of `data` at the moment is ---> Error
+     *      return <div>Something went wrong: {error.message}</div>
+     * }
+     * 
+     * // It is important to use return otherwise type narrowing won't work
+     * 
+     * // The type of `data` at the moment is ---> null | string
+     * // As you can see, we narrows the type of `data` down to `NULL` or `STRING`
+     * 
+     * if (data === null) {
+     *      // The type of `data` at the moment is ---> null
+     *      return <div>Cannot find any data</div>
+     * }
+     * 
+     * // The type of `data` at the moment is ---> string
+     * As you can seem we completely eliminated all the other paths and at this point
+     * we know that `data` can only be a `STRING`, so we can simply return it
+     * 
+     * 
+     * return <div>The data value is: {data}</div>
+     * 
+     * 
+     * 
+     * 
+     * When you write your application, always try to think defensively and always cover the so called
+     * `UNHAPPY` path as it is very likely to happen. Conditional rendering is a very simple and effective way
+     * to handle different scenarios.
+     */
+
+
     if (!error) {
         quizQuestions = questions.map((question, questionIndex) => {
 
@@ -62,6 +104,8 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
                                 key={index}
                                 id={uniqueAnsId}
                                 onClick={() => handleSelect(question.id, uniqueAnsId)}
+                                // This will not work unfortunately, as you will always get back a unique ID
+                                // and you the following logical operation will never be true: selectedAnswers[question.id] === uniqueAnsId
                                 className={`${questionIndex} answer_span  ${selectedAnswers[question.id] === uniqueAnsId ? 'select' : ''}  `}
                             >{answer}</button>
                         })}
@@ -104,6 +148,8 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
         });
     }
     function playAgain() {
+        // It feels like you would only need a single state to handle your application state correctly
+        // as you always set toggle and restart to the same value (as far as I can tell)
         setStart(false)
         setRestart(false)
         setToggle(false)

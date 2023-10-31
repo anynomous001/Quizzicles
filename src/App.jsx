@@ -49,6 +49,12 @@ function App() {
   const getQuestions = async (e) => {
     e.preventDefault()
 
+    // I am afraid using vanilla JS is not the best idea
+    // You can extract the form itself from the "event"
+    // event.currentTarget <-- The element that has the event handler attached to
+    // event.target <-- The element that has been dispatched the event
+    // In your case both of these values will point to the same element,
+    // event.target is used when you want to use the even bubbling to handle user actions
     const form = document.getElementById('quiz-form')
 
     const formdata = new FormData(form)
@@ -57,7 +63,11 @@ function App() {
 
 
 
+    // I think it would be nice to extract this into a utils.js as a utility function
+    // so it won't live inside the component making your code more compact, easier
+    // to read and maintain
     function shuffleArray(array) {
+      // Can you think of a way do make this function even shorter?
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
@@ -66,7 +76,11 @@ function App() {
     }
 
     const questions = await fetchQuestions(category, level);
+
+    // You cannot check the error this way because of scope works
+    // The error should be handled in the main component scope
     if (!error) {
+      // This could go inside the "fetchQuestions" function
       setQuizQuestions(() => {
         return questions.map((question) => {
           return {
@@ -84,6 +98,8 @@ function App() {
     setStart(true);
   };
 
+  // I would extract this into a constants.js as this will unlikely to change
+  // and it causes is a little bit of a "noise" in your component
   const options = [
     { value: '9', label: 'General Knowledge' },
     { value: '10', label: 'Entertainment: Books' },
@@ -116,11 +132,22 @@ function App() {
       <div className="main">
         <div className={`start-container ${start ? 'game-start' : ''}`}>
           <h1>Quizzicle</h1>
+          {/* 
+            The following can be simplified: 
+            FROM: onSubmit={(e) => getQuestions(e)}
+            TO: onSubmit={getQuestions}
+
+            // It is exactly the same but a bit less key strokes
+            // Use the one you prefer, it doesn't make any difference :)
+          
+          */}
           <form id='quiz-form' onSubmit={(e) => getQuestions(e)}>
             <p className='label-category' >Select Category :</p>
             <select id='category' className='category' name="category">
               {options.map((option) => {
                 return (
+                  // Tiny mistake, you forgot to specify the "key"
+                  // attribute on the "option" element which is important
                   <option value={option.value}>{option.label}</option>
 
                 )
