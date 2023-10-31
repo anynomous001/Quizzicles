@@ -5,28 +5,46 @@ import Questions from './Questions';
 import { nanoid } from 'nanoid';
 
 
-async function fetchQuestions(category, level) {
 
-  try {
-    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
-
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`)
-    }
-    const data = await res.json();
-    return data.results;
-  } catch (error) {
-    console.error('An error occurred:', error);
-    return null
-  }
-
-}
 
 
 function App() {
 
   const [quizQuestions, setQuizQuestions] = React.useState([]);
   const [start, setStart] = React.useState(false);
+  const [error, setError] = React.useState(null)
+
+
+
+  async function fetchQuestions(category, level) {
+
+    try {
+      const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`)
+      }
+      const data = await res.json();
+      return data.results;
+    } catch (error) {
+      console.log(error)
+      setError(error)
+    }
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const getQuestions = async (e) => {
     e.preventDefault()
@@ -48,19 +66,21 @@ function App() {
     }
 
     const questions = await fetchQuestions(category, level);
+    if (!error) {
+      setQuizQuestions(() => {
+        return questions.map((question) => {
+          return {
+            key: question.correct_answer,
+            question: question.question,
+            id: nanoid(),
+            correctAnswer: question.correct_answer,
+            answers: shuffleArray([...question.incorrect_answers, question.correct_answer])
+          }
+        })
 
-    setQuizQuestions(() => {
-      return questions.map((question) => {
-        return {
-          question: question.question,
-          id: nanoid(),
-          correctAnswer: question.correct_answer,
-          answers: shuffleArray([...question.incorrect_answers, question.correct_answer])
-        }
-      })
+      });
+    }
 
-    });
-    console.log(quizQuestions)
     setStart(true);
   };
 
@@ -122,7 +142,7 @@ function App() {
         </div>
 
         <div className="quiz-setup">
-          <Questions questions={quizQuestions} start={start} setStart={setStart} />
+          <Questions error={error} questions={quizQuestions} start={start} setStart={setStart} />
         </div>
       </div>
     </div>

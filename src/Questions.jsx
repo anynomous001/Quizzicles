@@ -3,14 +3,15 @@ import './App.css'
 import { nanoid } from 'nanoid';
 
 
-const Questions = ({ questions, start, setStart }) => {
+const Questions = ({ error, questions, start, setStart }) => {
 
     /*  Answers state for storing all the shuffled answer*/
-    /*const [selectedAnswers, setSelectedAnswers] = React.useState({ qIndex: null, useranswer: null })*/
-    const [selectedAnswers, setSelectedAnswers] = React.useState(Array(questions.length).fill(null))
+
     const [correctCount, setCorrectCount] = React.useState(0)
     const [toggle, setToggle] = React.useState(false)
     const [restart, setRestart] = React.useState(false)
+    const [selectedAnswers, setSelectedAnswers] = React.useState(Array(questions.length).fill(null))
+
 
 
     console.log(questions)
@@ -28,27 +29,27 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 
 
 
-    function handleSelect(questionIndex, selectedElementId) {
+    function handleSelect(questionId, userSelectedAnsId) {
+        console.log(selectedAnswers)
 
-        setSelectedAnswers((prevAnswers) => {
-            if (prevAnswers) {
-                return {
-                    ...prevAnswers,
-                    [questionIndex]: selectedElementId,
-                }
+        setSelectedAnswers((prevSelectedAnswers) => {
+            let newSelectedAnswers = [];
+
+            if (prevSelectedAnswers) {
+                newSelectedAnswers = [...prevSelectedAnswers];
+                newSelectedAnswers[questionId] = userSelectedAnsId;
+                return newSelectedAnswers;
             } else {
-                return {
-                    [questionIndex]: selectedElementId,
-                }
+                newSelectedAnswers[questionId] = userSelectedAnsId;
+                return newSelectedAnswers;
             }
 
-
-        })
+        });
 
     }
     let quizQuestions;
 
-    if (questions) {
+    if (!error) {
         quizQuestions = questions.map((question, questionIndex) => {
 
             return (
@@ -56,11 +57,12 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
                     <h3>{question.question}</h3>
                     <div className='answers-div'>
                         {question.answers?.map((answer, index) => {
+                            const uniqueAnsId = nanoid()
                             return <button
                                 key={index}
-                                id={nanoid()}
-                                onClick={() => handleSelect(questionIndex, answer)}
-                                className={`${questionIndex} answer_span  ${selectedAnswers[questionIndex] === answer ? 'select' : ''}  `}
+                                id={uniqueAnsId}
+                                onClick={() => handleSelect(question.id, uniqueAnsId)}
+                                className={`${questionIndex} answer_span  ${selectedAnswers[question.id] === uniqueAnsId ? 'select' : ''}  `}
                             >{answer}</button>
                         })}
                     </div>
@@ -69,7 +71,7 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
             )
         })
     } else {
-        quizQuestions = <p className='fail-msg'>Failed to fetch questions</p>
+        quizQuestions = <p className='fail-msg'>{error}</p>
     }
 
     function checkAnswers() {
@@ -110,10 +112,10 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
     return (
         <div className='quiz-div'>
             {start && quizQuestions}
-            {restart ?
+            {  /*{restart ?
                 < button className={`play-again-btn ${start ? '' : 'btn'}`} onClick={playAgain}>Play Again</button>
                 : < button className={`check-btn ${start ? '' : 'btn'}`} onClick={checkAnswers}>Check Answer</button>
-            }
+            }*/}
             {toggle && <h3 className='score-msg'>You got <span className='score'>{correctCount}/{questions.length}</span> Correct Answers</h3>}
         </div>
     )
