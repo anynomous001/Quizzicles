@@ -3,6 +3,8 @@ import React from 'react';
 import './App.css';
 import Questions from './Questions';
 import { nanoid } from 'nanoid';
+import { shuffleArray } from './utils'
+import { options } from './topicoptions'
 
 
 
@@ -18,33 +20,11 @@ function App() {
 
   async function fetchQuestions(category, level) {
 
-    try {
-      const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
-
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`)
-      }
-      const data = await res.json();
-      return data.results;
-    } catch (error) {
-      console.log(error)
-      setError(error)
-    }
+    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
+    const data = await res.json();
+    return data.results;
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const getQuestions = async (e) => {
     e.preventDefault()
@@ -57,58 +37,24 @@ function App() {
 
 
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
+
 
     const questions = await fetchQuestions(category, level);
-    if (!error) {
-      setQuizQuestions(() => {
-        return questions.map((question) => {
-          return {
-            key: question.correct_answer,
-            question: question.question,
-            id: nanoid(),
-            correctAnswer: question.correct_answer,
-            answers: shuffleArray([...question.incorrect_answers, question.correct_answer])
-          }
-        })
+    setQuizQuestions(() => {
+      return questions.map((question) => {
+        return {
+          key: question.correct_answer,
+          question: question.question,
+          id: nanoid(),
+          correctAnswer: question.correct_answer,
+          answers: shuffleArray([...question.incorrect_answers, question.correct_answer])
+        }
+      })
+    });
 
-      });
-    }
 
     setStart(true);
   };
-
-  const options = [
-    { value: '9', label: 'General Knowledge' },
-    { value: '10', label: 'Entertainment: Books' },
-    { value: '11', label: 'Entertainment: Film' },
-    { value: '12', label: 'Entertainment: Music' },
-    { value: '13', label: 'Entertainment: Musicals & Theatres' },
-    { value: '14', label: 'Entertainment: Television' },
-    { value: '15', label: 'Entertainment: Video Games' },
-    { value: '16', label: 'Entertainment: Board Games' },
-    { value: '17', label: 'Science & Nature' },
-    { value: '18', label: 'Science: Computers' },
-    { value: '19', label: 'Science: Mathematics' },
-    { value: '20', label: 'Mythology' },
-    { value: '21', label: 'Sports' },
-    { value: '22', label: 'Geography' },
-    { value: '23', label: 'History' },
-    { value: '24', label: 'Politics' },
-    { value: '25', label: 'Art' },
-    { value: '26', label: 'Celebrities' },
-    { value: '27', label: 'Animals' },
-    { value: '28', label: 'Entertainment: Comics' },
-    { value: '29', label: 'Science: Gadgets' },
-    { value: '30', label: 'Entertainment: Japanese Anime & Manga' },
-    { value: '31', label: 'Entertainment: Cartoon & Animations' }
-  ];
 
 
   return (
