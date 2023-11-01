@@ -29,50 +29,45 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 
 
 
-    function handleSelect(questionId, userSelectedAnsId) {
-        console.log(selectedAnswers)
+    /*function handleSelect(questionId, userSelectedAnsId) {
+            console.log(selectedAnswers)
+    
+            setSelectedAnswers((prevSelectedAnswers) => {
+                let newSelectedAnswers = [];
+    
+                if (prevSelectedAnswers) {
+                    newSelectedAnswers = [...prevSelectedAnswers];
+                    newSelectedAnswers[questionId] = userSelectedAnsId;
+                    return newSelectedAnswers;
+                } else {
+                    newSelectedAnswers[questionId] = userSelectedAnsId;
+                    return newSelectedAnswers;
+                }
+    
+            });
+        }*/
 
-        setSelectedAnswers((prevSelectedAnswers) => {
-            let newSelectedAnswers = [];
-
-            if (prevSelectedAnswers) {
-                newSelectedAnswers = [...prevSelectedAnswers];
-                newSelectedAnswers[questionId] = userSelectedAnsId;
-                return newSelectedAnswers;
-            } else {
-                newSelectedAnswers[questionId] = userSelectedAnsId;
-                return newSelectedAnswers;
-            }
-
-        });
-
-    }
-    let quizQuestions;
-
-    if (!error) {
-        quizQuestions = questions.map((question, questionIndex) => {
-
-            return (
-                <div className='quizes' key={questionIndex}>
-                    <h3>{question.question}</h3>
-                    <div className='answers-div'>
-                        {question.answers?.map((answer, index) => {
-                            const uniqueAnsId = nanoid()
-                            return <button
-                                key={index}
-                                id={uniqueAnsId}
-                                onClick={() => handleSelect(question.id, uniqueAnsId)}
-                                className={`${questionIndex} answer_span  ${selectedAnswers[question.id] === uniqueAnsId ? 'select' : ''}  `}
-                            >{answer}</button>
-                        })}
-                    </div>
-                    <hr></hr>
+    const quizQuestions = questions.map((question, questionIndex) => {
+        return (
+            <div className='quizes' key={questionIndex}>
+                <h3>{question.question}</h3>
+                <div className='answers-div'>
+                    {question.answers?.map((answer, index) => {
+                        const uniqueAnsId = nanoid()
+                        return <button
+                            key={index}
+                            id={uniqueAnsId}
+                            onClick={() => handleSelect(question.id, uniqueAnsId)}
+                            className={`${questionIndex} answer_span  ${selectedAnswers[question.id] === uniqueAnsId ? 'select' : ''}  `}
+                        >{answer}</button>
+                    })}
                 </div>
-            )
-        })
-    } else {
-        quizQuestions = <p className='fail-msg'>{error}</p>
-    }
+                <hr></hr>
+            </div>
+        )
+    })
+
+
 
     function checkAnswers() {
         setToggle(true);
@@ -81,26 +76,22 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
             const userAnswer = selectedAnswers[index];
             const correctAnswerId = question.correct_answer;
 
-            // Add the 'correct' class to the correct answer
             document.getElementById(correctAnswerId).classList.add('correct');
 
             if (userAnswer !== undefined) {
                 if (correctAnswerId === userAnswer) {
                     setCorrectCount(correctCount + 1);
                 } else {
-                    // Add the 'wrong' class to the user's wrong answer
                     document.getElementById(userAnswer).classList.add('wrong');
                 }
             }
 
-            // Disable all options except the correct answer and the user's answer
             answers[index].forEach((answer) => {
                 if (answer !== correctAnswerId && answer !== userAnswer) {
                     document.getElementById(answer).disabled = true;
                 }
             });
 
-            // Disable the 'Check Answer' button after checking
         });
     }
     function playAgain() {
@@ -111,7 +102,9 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 
     return (
         <div className='quiz-div'>
-            {start && quizQuestions}
+            {error ?
+                <h1>{error}</h1>
+                : quizQuestions}
             {  /*{restart ?
                 < button className={`play-again-btn ${start ? '' : 'btn'}`} onClick={playAgain}>Play Again</button>
                 : < button className={`check-btn ${start ? '' : 'btn'}`} onClick={checkAnswers}>Check Answer</button>

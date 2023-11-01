@@ -19,12 +19,20 @@ function App() {
 
 
   async function fetchQuestions(category, level) {
-
-    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
-    const data = await res.json();
-    return data.results;
-
+    try {
+      const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
+      if (!res.ok) {
+        throw new Error('Error took place' + res.status);
+      }
+      const data = await res.json();
+      return data.results;
+    } catch (error) {
+      throw error; // Re-throw the error
+    }
   }
+
+
+
 
   const getQuestions = async (e) => {
     e.preventDefault()
@@ -35,25 +43,29 @@ function App() {
     const category = formdata.get('category')
     const level = formdata.get('level')
 
-
-
-
-
-    const questions = await fetchQuestions(category, level);
-    setQuizQuestions(() => {
-      return questions.map((question) => {
-        return {
-          key: question.correct_answer,
-          question: question.question,
-          id: nanoid(),
-          correctAnswer: question.correct_answer,
-          answers: shuffleArray([...question.incorrect_answers, question.correct_answer])
-        }
-      })
-    });
-
-
     setStart(true);
+
+
+    try {
+      const questions = await fetchQuestions(category, level);
+      setError(null); // Clear any previous errors
+      setQuizQuestions(() => {
+        return questions.map((question) => {
+          const questionId = nanoid(); // Generate a unique ID for the question
+
+          return {
+            key: questionId, // Use the generated ID as the key
+            question: question.question,
+            id: questionId,
+            correctAnswer: question.correct_answer,
+            answers: shuffleArray([...question.incorrect_answers, question.correct_answer]),
+          };
+        });
+      });
+    } catch (error) {
+      setError(error.message); // Set the error message
+    }
+
   };
 
 
