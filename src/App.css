@@ -186,6 +186,10 @@ hr {
 
 }
 
+.correct {
+  background-color: rgb(56, 219, 165);
+}
+
 .check-btn {
   background: #293264;
   font-family: 'Roboto', sans-serif;
@@ -251,9 +255,7 @@ hr {
   border-color: #2932645e;
 }
 
-.btn {
-  display: none;
-}
+
 
 .level,
 .category {

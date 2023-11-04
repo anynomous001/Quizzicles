@@ -1,65 +1,173 @@
 import React from 'react'
 import './App.css'
 import { nanoid } from 'nanoid';
+import { QuizReducer, Initial_State } from './QuizReducer';
+
+// How to determine which one to use: useState OR useReducer
+// useReducer ---> If you have states which are "coupled together"/"depend on each other"
+// useState --->  When you states are not depending on each other, can live separately (in any other cases)
+
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+
+// Derive from your state whenever you can, do not create a new state just to save a new value
+// console.log(questions)
+
+// let correctCount = 0;
+// for (let i = 0; i < questions.length; i++) {
+//     const question = questions[i]
+
+//     if (false) {
+//         correctCount++
+//     }
+// }
+
+// const correctCount2 = questions.reduce((acc, question) => {
+//     // some branching
+// }, 0)
+
+// const correctCountMemo = React.useMemo(() => {
+//     if (!isGameOn) return 0
+
+//     let count = 0;
+
+//     for (let i = 0; i < questions.length; i++) {
+//         const question = questions[i]
+
+//         if (false) {
+//             count++
+//         }
+//     }
+
+//     return count
+// }, [questions])
 
 
-const Questions = ({ error, questions, start, setStart }) => {
+// const correctCount2Memo = React.useMemo(() => {
+//     if (!isGameOn) return 0
 
-    /*  Answers state for storing all the shuffled answer*/
+//     return questions.reduce((acc, question) => {
+//         // some branching
+//     }, 0)
+// }, [questions])
 
-    const [correctCount, setCorrectCount] = React.useState(0)
-    const [toggle, setToggle] = React.useState(false)
-    const [restart, setRestart] = React.useState(false)
-    const [selectedAnswers, setSelectedAnswers] = React.useState(Array(questions.length).fill(null))
+// ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
+
+// You can be creative by extracting logic into your own custom hooks
+// const requestStatuses = {
+//     Idle: 'idle',
+//     Pending: 'pending',
+//     Resolved: 'resolves',
+//     Rejected: 'rejected',
+// }
+
+// const useStatus = (defaultStatus = requestStatuses.Idle) => {
+//     const [status, setStatus] = React.useState(defaultStatus)
+
+//     const isIdle = status === requestStatuses.Idle
+//     const isPending = status === requestStatuses.Pending
+//     const isResolved = status === requestStatuses.Resolved
+//     const isRejected = status === requestStatuses.Rejected
+
+//     return {
+//         isIdle,
+//         isPending,
+//         isResolved,
+//         isRejected,
+//         status,
+//         setStatus,
+//     }
+// }
 
 
+// const decreaseCounter = () => {
+//     dispatch({ type: 'decrease' })
+// }
 
-    console.log(questions)
+// const { isIdle, isPending, isResolved, isRejected, } = useStatus()
+
+// const hasError = error != null // ---> error !== undefined && error !== null
+
+// if (isIdle) {
+//     return ???
+// }
+
+// if (isPending && hasError) {
+//     return 'We cought and erro but still trying to load the data'
+// }
+
+// if (isPending && !hasError) {
+
+// }
 
 
+// What to do next:
+// 1. Use "selectAnswer" in Questions component
+// 2. Derive correctCount from your state
+// 3. Have a think how you could derive the styling based on your state values:
+//    (selectedAnswerId, correctAnswerId and start)
+// 4. Add prettier to your codebase and setup your IDE to format on save (latter is optional but recommended)
+// Don't forget to add a script to you package.json that formats your files inside your "./src" directory
 
-    /*ShuffleArray function for Shuffling correct and incorrect answers
+
+/*ShuffleArray function for Shuffling correct and incorrect answers
     
 answers: (4) ['Notebook', 'Money', 'Watch', 'Keys']
 correctAnswer: "Watch"
 id: "SX9AnH7pckZXpCr2zeJiy"
 question: "In past times, what would a gentleman keep in his fob pocket?"
+ 
+*/
 
-    */
 
 
+/* setSelectedAnswers((prevAnswers) => {
+     if (prevAnswers)
+         return {
+             ...prevAnswers,
+             [questionIndex]: userSelectedAnsId,
+         }
+     else {
+         return {
+             [questionIndex]: userSelectedAnsId,
+         }
+     }
+ 
+ })*/
 
-    /*function handleSelect(questionId, userSelectedAnsId) {
-            console.log(selectedAnswers)
-    
-            setSelectedAnswers((prevSelectedAnswers) => {
-                let newSelectedAnswers = [];
-    
-                if (prevSelectedAnswers) {
-                    newSelectedAnswers = [...prevSelectedAnswers];
-                    newSelectedAnswers[questionId] = userSelectedAnsId;
-                    return newSelectedAnswers;
-                } else {
-                    newSelectedAnswers[questionId] = userSelectedAnsId;
-                    return newSelectedAnswers;
-                }
-    
-            });
-        }*/
+// setSelectedAnswers((prevAnswers) => {
+//     let updatedAnswers = []
+//     if (prevAnswers) {
+//         updatedAnswers = [...prevAnswers];
+//         updatedAnswers[questionIndex] = userSelectedAnsId;
+//         return updatedAnswers;
 
-    const quizQuestions = questions.map((question, questionIndex) => {
+//     } else {
+
+//         updatedAnswers[questionIndex] = userSelectedAnsId;
+//         return updatedAnswers;
+
+//     }
+// });
+// console.log(selectedAnswers)
+
+
+const Questions = ({ error, start, questions, selectAnswer }) => {
+
+    const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
+    const quizQuestions = questions?.map((question, questionIndex) => {
         return (
             <div className='quizes' key={questionIndex}>
                 <h3>{question.question}</h3>
                 <div className='answers-div'>
                     {question.answers?.map((answer, index) => {
-                        const uniqueAnsId = nanoid()
                         return <button
-                            key={index}
-                            id={uniqueAnsId}
-                            onClick={() => handleSelect(question.id, uniqueAnsId)}
-                            className={`${questionIndex} answer_span  ${selectedAnswers[question.id] === uniqueAnsId ? 'select' : ''}  `}
-                        >{answer}</button>
+                            key={answer.id}
+                            id={answer.id}
+                            onClick={() => selectAnswer(question.id, answer.id)}
+                            className={`${questionIndex} answer_span  ${answer.id === question.selectedAnswerId ? 'select' : ''}  `}
+                        >{answer.value}</button>
                     })}
                 </div>
                 <hr></hr>
@@ -69,48 +177,39 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 
 
 
+
+
     function checkAnswers() {
-        setToggle(true);
-        setRestart(true)
-        questions.forEach((question, index) => {
-            const userAnswer = selectedAnswers[index];
-            const correctAnswerId = question.correct_answer;
+        dispatch({ type: 'Answer_checked' })
 
-            document.getElementById(correctAnswerId).classList.add('correct');
 
-            if (userAnswer !== undefined) {
-                if (correctAnswerId === userAnswer) {
-                    setCorrectCount(correctCount + 1);
-                } else {
-                    document.getElementById(userAnswer).classList.add('wrong');
-                }
-            }
 
-            answers[index].forEach((answer) => {
-                if (answer !== correctAnswerId && answer !== userAnswer) {
-                    document.getElementById(answer).disabled = true;
-                }
-            });
-
-        });
     }
-    function playAgain() {
-        setStart(false)
-        setRestart(false)
-        setToggle(false)
-    }
+
 
     return (
         <div className='quiz-div'>
-            {error ?
-                <h1>{error}</h1>
-                : quizQuestions}
-            {  /*{restart ?
-                < button className={`play-again-btn ${start ? '' : 'btn'}`} onClick={playAgain}>Play Again</button>
-                : < button className={`check-btn ${start ? '' : 'btn'}`} onClick={checkAnswers}>Check Answer</button>
-            }*/}
-            {toggle && <h3 className='score-msg'>You got <span className='score'>{correctCount}/{questions.length}</span> Correct Answers</h3>}
-        </div>
+            {start.start && error && <h1>{error}</h1>}
+            {start.start && !error && quizQuestions}
+
+            {start.start && !state.answerChecked && (
+                <button className="check-btn" onClick={checkAnswers}>Check Answer</button>
+            )}
+
+            {start.start && state.answerChecked &&
+                <>
+                    <button className={`play-again-btn`}
+                        onClick={() => {
+                            start.setStart(false);
+                            dispatch({ type: 'Fetching-success' })
+                        }} key={nanoid()} >Play Again</button>
+
+                    <h3 className='score-msg'>You got <span className='score'>{'0'}/{questions.length}</span> Correct Answers</h3>
+                </>
+
+            }
+
+        </div >
     )
 }
 export default Questions;

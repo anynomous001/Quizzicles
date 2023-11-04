@@ -5,6 +5,8 @@ import Questions from './Questions';
 import { nanoid } from 'nanoid';
 import { shuffleArray } from './utils'
 import { options } from './topicoptions'
+import { QuizReducer, Initial_State } from './QuizReducer';
+
 
 
 
@@ -12,11 +14,10 @@ import { options } from './topicoptions'
 
 function App() {
 
-  const [quizQuestions, setQuizQuestions] = React.useState([]);
-  const [start, setStart] = React.useState(false);
+  const [questions, setQuestions] = React.useState([]);
   const [error, setError] = React.useState(null)
-
-
+  const [start, setStart] = React.useState(false)
+  const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
 
   async function fetchQuestions(category, level) {
     try {
@@ -25,6 +26,8 @@ function App() {
         throw new Error('Error took place' + res.status);
       }
       const data = await res.json();
+      dispatch({ type: 'Fetching_success' })
+
       return data.results;
     } catch (error) {
       throw error; // Re-throw the error
@@ -35,39 +38,63 @@ function App() {
 
 
   const getQuestions = async (e) => {
+    dispatch({ type: 'Fetching_start' })
+    setStart(true)
     e.preventDefault()
 
-    const form = document.getElementById('quiz-form')
+    console.log(e.target.category.value)
 
-    const formdata = new FormData(form)
-    const category = formdata.get('category')
-    const level = formdata.get('level')
-
-    setStart(true);
-
+    const category = e.target.category.value
+    const level = e.target.level.value
 
     try {
       const questions = await fetchQuestions(category, level);
       setError(null); // Clear any previous errors
-      setQuizQuestions(() => {
+      setQuestions(() => {
         return questions.map((question) => {
-          const questionId = nanoid(); // Generate a unique ID for the question
+          const correctAnswer = {
+            id: nanoid(),
+            value: question.correct_answer,
+          }
+
+          const incorrectAnswers = question.incorrect_answers.map(value => ({
+            id: nanoid(),
+            value,
+          }))
+
+          // [
+          //   { id: 'fsadfq34aegvds', value: 'Apple' },
+          //   { id: '4g3qefgvewdcew', value: 'Pear' },
+          // ]
 
           return {
-            key: questionId, // Use the generated ID as the key
             question: question.question,
-            id: questionId,
-            correctAnswer: question.correct_answer,
-            answers: shuffleArray([...question.incorrect_answers, question.correct_answer]),
+            id: nanoid(),
+            answers: shuffleArray([...incorrectAnswers, correctAnswer]),
+            correctAnswerId: correctAnswer.id,
+            selectedAnswerId: null,
           };
         });
       });
     } catch (error) {
       setError(error.message); // Set the error message
     }
-
   };
 
+  const selectAnswer = (selectedQuestionId, selectedAnswerId) => {
+    console.log(state + 'appp')
+    setQuestions(prevData => {
+      return prevData.map(question => {
+        if (question.id !== selectedQuestionId) return question
+
+        // some stuff 
+        return {
+          ...question,
+          selectedAnswerId,
+        }
+      })
+    })
+  }
 
   return (
     <div className="app">
@@ -79,11 +106,9 @@ function App() {
             <select id='category' className='category' name="category">
               {options.map((option) => {
                 return (
-                  <option value={option.value}>{option.label}</option>
-
+                  <option key={option.value} value={option.value}>{option.label}</option>
                 )
               })}
-
             </select>
 
 
@@ -100,7 +125,7 @@ function App() {
         </div>
 
         <div className="quiz-setup">
-          <Questions error={error} questions={quizQuestions} start={start} setStart={setStart} />
+          <Questions error={error} questions={questions} start={{ start, setStart }} selectAnswer={selectAnswer} />
         </div>
       </div>
     </div>
