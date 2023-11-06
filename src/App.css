@@ -39,12 +39,11 @@
 
 
 .main {
-  height: 100vh;
+  height: 150vh;
   display: grid;
   place-items: center;
-  width: auto;
+  width: 100%;
   background-color: #d6dbf562;
-  border: black solid 1px
 }
 
 .start-container {
@@ -138,13 +137,19 @@ hr {
 
 .quizes {
   color: #293264;
-  margin: 0.6em 0;
+  margin: 1em 0;
+}
+
+.quizes h3 {
+  width: 100%;
+  font-size: 1.2rem;
 }
 
 .answers-div {
   display: flex;
   margin: 0.6em;
   gap: 2em;
+  flex-wrap: wrap;
 }
 
 
