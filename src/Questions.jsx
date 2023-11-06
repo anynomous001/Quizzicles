@@ -156,18 +156,34 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 const Questions = ({ error, start, loading, questions, selectAnswer }) => {
 
     const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
+    const [correctAnswers, setCorrectAnswers] = React.useState({});
+    const [wrongAnswers, setWrongAnswers] = React.useState({});
 
     const quizQuestions = questions?.map((question, questionIndex) => {
+
+        const isCorrect = correctAnswers[question.id];
+        const isWrong = wrongAnswers[question.id];
+
+
         return (
             <div className='quizes' key={questionIndex}>
                 <h3>{question.question}</h3>
                 <div className='answers-div'>
                     {question.answers?.map((answer, index) => {
+
+                        const isAnswerSelected = answer.id === question.selectedAnswerId;
+                        const correctAnswer = answer.id === question.correctAnswerId
+
                         return <button
                             key={answer.id}
                             id={answer.id}
                             onClick={() => selectAnswer(question.id, answer.id)}
-                            className={`${questionIndex} answer_span  ${answer.id === question.selectedAnswerId ? 'select' : ''}  `}
+                            disabled={state.answerChecked && !correctAnswer && !isAnswerSelected && true}
+                            className={`
+                            answer_span ${isAnswerSelected ? 'select' : ''}
+                             ${correctAnswer && state.answerChecked ? 'correct' : ''
+                                } ${isWrong && isAnswerSelected ? 'wrong' : ''}
+                                `}
                         >{answer.value}</button>
                     })}
                 </div>
@@ -182,10 +198,22 @@ const Questions = ({ error, start, loading, questions, selectAnswer }) => {
     function checkAnswers() {
         dispatch({ type: 'Answer_checked' })
 
-        questions.forEach((question) => {
-            question.selectedAnswerId === question.correctAnswerId ? dispatch({ type: 'correct-answer' }) : null
-        })
 
+        const correctAnswersObj = {};
+        const wrongAnswersObj = {};
+
+        questions.forEach((question) => {
+            if (question.selectedAnswerId === question.correctAnswerId) {
+                dispatch({ type: 'correct-answer' })
+
+                correctAnswersObj[question.id] = true;
+            } else {
+                wrongAnswersObj[question.id] = true;
+            }
+        });
+
+        setCorrectAnswers(correctAnswersObj);
+        setWrongAnswers(wrongAnswersObj);
     }
 
 

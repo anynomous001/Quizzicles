@@ -154,7 +154,8 @@ hr {
 }
 
 .fade {
-  opacity: .7;
+  opacity: 1;
+  background-color: rgba(25, 26, 27, 0.267);
   transition: none;
   transform: none;
 }

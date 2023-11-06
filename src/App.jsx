@@ -20,6 +20,8 @@ function App() {
   const [start, setStart] = React.useState(false)
   const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
 
+
+
   async function fetchQuestions(category, level) {
     try {
       const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
@@ -134,6 +136,8 @@ function App() {
               error={error}
               questions={questions}
               start={{ start, setStart }}
+
+
               loading={state.loading}
               selectAnswer={selectAnswer}
             />
