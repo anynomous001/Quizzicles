@@ -153,9 +153,10 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 // console.log(selectedAnswers)
 
 
-const Questions = ({ error, start, questions, selectAnswer }) => {
+const Questions = ({ error, start, loading, questions, selectAnswer }) => {
 
     const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
+
     const quizQuestions = questions?.map((question, questionIndex) => {
         return (
             <div className='quizes' key={questionIndex}>
@@ -188,28 +189,32 @@ const Questions = ({ error, start, questions, selectAnswer }) => {
 
 
     return (
-        <div className='quiz-div'>
-            {start.start && error && <h1>{error}</h1>}
-            {start.start && !error && quizQuestions}
 
-            {start.start && !state.answerChecked && (
+        start.start &&
+
+        <div className='quiz-div'>
+            {loading && <p>Loading....</p>}
+            {error && <h1>{error}</h1>}
+            {!error && quizQuestions}
+
+            {!state.answerChecked && (
                 <button className="check-btn" onClick={checkAnswers}>Check Answer</button>
             )}
 
-            {start.start && state.answerChecked &&
+            {state.answerChecked &&
                 <>
                     <button className={`play-again-btn`}
                         onClick={() => {
                             start.setStart(false);
-                            dispatch({ type: 'Fetching-success' })
+                            dispatch({ type: 'game-restarted' })
                         }} key={nanoid()} >Play Again</button>
 
                     <h3 className='score-msg'>You got <span className='score'>{'0'}/{questions.length}</span> Correct Answers</h3>
                 </>
 
             }
-
         </div >
+
     )
 }
 export default Questions;

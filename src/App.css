@@ -300,3 +300,28 @@ hr {
 .fail-msg {
   color: #293264
 }
+
+.spinner {
+  height: 2em;
+  color: #293264;
+  display: flex;
+  align-self: center;
+  text-align: center;
+  width: 18em;
+
+}
+
+.loading-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner div p {
+  font-size: 2rem;
+  margin-top: 0.7em;
+  font-weight: 600;
+  color: #293264;
+  margin-left: 1.2em;
+}

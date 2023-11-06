@@ -3,9 +3,10 @@ import React from 'react';
 import './App.css';
 import Questions from './Questions';
 import { nanoid } from 'nanoid';
-import { shuffleArray } from './utils'
+import { shuffleArray, LoadingSpinner } from './utils'
 import { options } from './topicoptions'
 import { QuizReducer, Initial_State } from './QuizReducer';
+
 
 
 
@@ -26,7 +27,6 @@ function App() {
         throw new Error('Error took place' + res.status);
       }
       const data = await res.json();
-      dispatch({ type: 'Fetching_success' })
 
       return data.results;
     } catch (error) {
@@ -38,7 +38,7 @@ function App() {
 
 
   const getQuestions = async (e) => {
-    dispatch({ type: 'Fetching_start' })
+    dispatch({ type: 'Fetching_started' })
     setStart(true)
     e.preventDefault()
 
@@ -47,38 +47,41 @@ function App() {
     const category = e.target.category.value
     const level = e.target.level.value
 
-    try {
-      const questions = await fetchQuestions(category, level);
-      setError(null); // Clear any previous errors
-      setQuestions(() => {
-        return questions.map((question) => {
-          const correctAnswer = {
-            id: nanoid(),
-            value: question.correct_answer,
-          }
+    setTimeout(async () => {
+      try {
+        const questions = await fetchQuestions(category, level);
+        setError(null); // Clear any previous errors
+        setQuestions(() => {
+          return questions.map((question) => {
+            const correctAnswer = {
+              id: nanoid(),
+              value: question.correct_answer,
+            }
 
-          const incorrectAnswers = question.incorrect_answers.map(value => ({
-            id: nanoid(),
-            value,
-          }))
+            const incorrectAnswers = question.incorrect_answers.map(value => ({
+              id: nanoid(),
+              value,
+            }))
 
-          // [
-          //   { id: 'fsadfq34aegvds', value: 'Apple' },
-          //   { id: '4g3qefgvewdcew', value: 'Pear' },
-          // ]
+            // [
+            //   { id: 'fsadfq34aegvds', value: 'Apple' },
+            //   { id: '4g3qefgvewdcew', value: 'Pear' },
+            // ]
 
-          return {
-            question: question.question,
-            id: nanoid(),
-            answers: shuffleArray([...incorrectAnswers, correctAnswer]),
-            correctAnswerId: correctAnswer.id,
-            selectedAnswerId: null,
-          };
+            return {
+              question: question.question,
+              id: nanoid(),
+              answers: shuffleArray([...incorrectAnswers, correctAnswer]),
+              correctAnswerId: correctAnswer.id,
+              selectedAnswerId: null,
+            };
+          });
         });
-      });
-    } catch (error) {
-      setError(error.message); // Set the error message
-    }
+      } catch (error) {
+        setError(error.message); // Set the error message
+      }
+      dispatch({ type: 'Fetching-success' }); // Mark loading as completed
+    }, 2000);
   };
 
   const selectAnswer = (selectedQuestionId, selectedAnswerId) => {
@@ -86,8 +89,6 @@ function App() {
     setQuestions(prevData => {
       return prevData.map(question => {
         if (question.id !== selectedQuestionId) return question
-
-        // some stuff 
         return {
           ...question,
           selectedAnswerId,
@@ -95,6 +96,7 @@ function App() {
       })
     })
   }
+
 
   return (
     <div className="app">
@@ -125,7 +127,20 @@ function App() {
         </div>
 
         <div className="quiz-setup">
-          <Questions error={error} questions={questions} start={{ start, setStart }} selectAnswer={selectAnswer} />
+          {state.loading ? (
+            <LoadingSpinner />
+          ) : (
+            <Questions
+              error={error}
+              questions={questions}
+              start={{ start, setStart }}
+              loading={state.loading}
+              selectAnswer={selectAnswer}
+            />
+          )}
+
+
+
         </div>
       </div>
     </div>

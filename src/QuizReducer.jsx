@@ -5,7 +5,7 @@ export const Initial_State = {
 
 export const QuizReducer = (state, action) => {
     switch (action.type) {
-        case 'Fetching_start':
+        case 'Fetching_started':
             return {
                 loading: true,
                 answerChecked: false
