@@ -179,11 +179,12 @@ const Questions = ({ error, start, loading, questions, selectAnswer }) => {
 
 
 
-
     function checkAnswers() {
         dispatch({ type: 'Answer_checked' })
 
-
+        questions.forEach((question) => {
+            question.selectedAnswerId === question.correctAnswerId ? dispatch({ type: 'correct-answer' }) : null
+        })
 
     }
 
@@ -209,7 +210,7 @@ const Questions = ({ error, start, loading, questions, selectAnswer }) => {
                             dispatch({ type: 'game-restarted' })
                         }} key={nanoid()} >Play Again</button>
 
-                    <h3 className='score-msg'>You got <span className='score'>{'0'}/{questions.length}</span> Correct Answers</h3>
+                    <h3 className='score-msg'>You got <span className='score'>{state.count}/{questions.length}</span> Correct Answers</h3>
                 </>
 
             }
