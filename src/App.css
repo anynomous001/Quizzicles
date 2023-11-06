@@ -154,7 +154,8 @@ hr {
 }
 
 .fade {
-  opacity: .7;
+  opacity: 1;
+  background-color: rgba(25, 26, 27, 0.267);
   transition: none;
   transform: none;
 }
@@ -184,6 +185,10 @@ hr {
   color: #293264a8;
   font-weight: 800;
 
+}
+
+.correct {
+  background-color: rgb(56, 219, 165);
 }
 
 .check-btn {
@@ -251,9 +256,7 @@ hr {
   border-color: #2932645e;
 }
 
-.btn {
-  display: none;
-}
+
 
 .level,
 .category {
@@ -297,4 +300,29 @@ hr {
 
 .fail-msg {
   color: #293264
+}
+
+.spinner {
+  height: 2em;
+  color: #293264;
+  display: flex;
+  align-self: center;
+  text-align: center;
+  width: 18em;
+
+}
+
+.loading-spinner {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-spinner div p {
+  font-size: 2rem;
+  margin-top: 0.7em;
+  font-weight: 600;
+  color: #293264;
+  margin-left: 1.2em;
 }

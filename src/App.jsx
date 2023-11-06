@@ -1,71 +1,104 @@
+
 import React from 'react';
 import './App.css';
 import Questions from './Questions';
+import { nanoid } from 'nanoid';
+import { shuffleArray, LoadingSpinner } from './utils'
+import { options } from './topicoptions'
+import { QuizReducer, Initial_State } from './QuizReducer';
 
 
-async function fetchQuestions(category, level) {
 
-  try {
-    const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
 
-    if (!res.ok) {
-      throw new Error(`HTTP error! Status: ${res.status}`)
-    }
-    const data = await res.json();
-    return data.results;
-  } catch (error) {
-    console.error('An error occurred:', error);
-    return null
-  }
 
-}
+
 
 
 function App() {
 
   const [questions, setQuestions] = React.useState([]);
-  const [start, setStart] = React.useState(false);
+  const [error, setError] = React.useState(null)
+  const [start, setStart] = React.useState(false)
+  const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
+
+
+
+  async function fetchQuestions(category, level) {
+    try {
+      const res = await fetch(`https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${level}&type=multiple`);
+      if (!res.ok) {
+        throw new Error('Error took place' + res.status);
+      }
+      const data = await res.json();
+
+      return data.results;
+    } catch (error) {
+      throw error; // Re-throw the error
+    }
+  }
+
+
+
 
   const getQuestions = async (e) => {
+    dispatch({ type: 'Fetching_started' })
+    setStart(true)
     e.preventDefault()
 
-    const form = document.getElementById('quiz-form')
+    console.log(e.target.category.value)
 
-    const formdata = new FormData(form)
-    const category = formdata.get('category')
-    const level = formdata.get('level')
+    const category = e.target.category.value
+    const level = e.target.level.value
 
-    const questions = await fetchQuestions(category, level);
-    console.log(questions)
-    setQuestions(questions);
-    setStart(true);
+    setTimeout(async () => {
+      try {
+        const questions = await fetchQuestions(category, level);
+        setError(null); // Clear any previous errors
+        setQuestions(() => {
+          return questions.map((question) => {
+            const correctAnswer = {
+              id: nanoid(),
+              value: question.correct_answer,
+            }
+
+            const incorrectAnswers = question.incorrect_answers.map(value => ({
+              id: nanoid(),
+              value,
+            }))
+
+            // [
+            //   { id: 'fsadfq34aegvds', value: 'Apple' },
+            //   { id: '4g3qefgvewdcew', value: 'Pear' },
+            // ]
+
+            return {
+              question: question.question,
+              id: nanoid(),
+              answers: shuffleArray([...incorrectAnswers, correctAnswer]),
+              correctAnswerId: correctAnswer.id,
+              selectedAnswerId: null,
+            };
+          });
+        });
+      } catch (error) {
+        setError(error.message); // Set the error message
+      }
+      dispatch({ type: 'Fetching-success' }); // Mark loading as completed
+    }, 2000);
   };
 
-  const options = [
-    { value: '9', label: 'General Knowledge' },
-    { value: '10', label: 'Entertainment: Books' },
-    { value: '11', label: 'Entertainment: Film' },
-    { value: '12', label: 'Entertainment: Music' },
-    { value: '13', label: 'Entertainment: Musicals & Theatres' },
-    { value: '14', label: 'Entertainment: Television' },
-    { value: '15', label: 'Entertainment: Video Games' },
-    { value: '16', label: 'Entertainment: Board Games' },
-    { value: '17', label: 'Science & Nature' },
-    { value: '18', label: 'Science: Computers' },
-    { value: '19', label: 'Science: Mathematics' },
-    { value: '20', label: 'Mythology' },
-    { value: '21', label: 'Sports' },
-    { value: '22', label: 'Geography' },
-    { value: '23', label: 'History' },
-    { value: '24', label: 'Politics' },
-    { value: '25', label: 'Art' },
-    { value: '26', label: 'Celebrities' },
-    { value: '27', label: 'Animals' },
-    { value: '28', label: 'Entertainment: Comics' },
-    { value: '29', label: 'Science: Gadgets' },
-    { value: '30', label: 'Entertainment: Japanese Anime & Manga' },
-    { value: '31', label: 'Entertainment: Cartoon & Animations' }
-  ];
+  const selectAnswer = (selectedQuestionId, selectedAnswerId) => {
+    console.log(state + 'appp')
+    setQuestions(prevData => {
+      return prevData.map(question => {
+        if (question.id !== selectedQuestionId) return question
+        return {
+          ...question,
+          selectedAnswerId,
+        }
+      })
+    })
+  }
 
 
   return (
@@ -78,11 +111,9 @@ function App() {
             <select id='category' className='category' name="category">
               {options.map((option) => {
                 return (
-                  <option value={option.value}>{option.label}</option>
-
+                  <option key={option.value} value={option.value}>{option.label}</option>
                 )
               })}
-
             </select>
 
 
@@ -99,11 +130,27 @@ function App() {
         </div>
 
         <div className="quiz-setup">
-          <Questions questions={questions} start={start} setStart={setStart} />
+          {state.loading ? (
+            <LoadingSpinner />
+          ) : (
+            <Questions
+              error={error}
+              questions={questions}
+              start={{ start, setStart }}
+
+
+              loading={state.loading}
+              selectAnswer={selectAnswer}
+            />
+          )}
+
+
+
         </div>
       </div>
     </div>
   );
 }
+
 
 export default App;
