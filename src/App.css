@@ -37,13 +37,17 @@
   z-index: 1;
 }
 
+body {
+  /* background-color: rgba(0, 255, 255, 0.671);*/
+  background-color: #d6dbf56b;
+}
 
 .main {
-  height: 150vh;
+  height: auto;
   display: grid;
   place-items: center;
   width: 100%;
-  background-color: #d6dbf562;
+  padding-bottom: 2em;
 }
 
 .start-container {
@@ -94,6 +98,7 @@
   height: 80%;
   width: 80%;
   z-index: 3;
+  margin-top: 2.5em;
 }
 
 .quiz-div {
@@ -101,7 +106,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-
 }
 
 
@@ -147,8 +151,8 @@ hr {
 
 .answers-div {
   display: flex;
-  margin: 0.6em;
-  gap: 2em;
+  margin: 1.1em;
+  gap: 1.5em;
   flex-wrap: wrap;
 }
 
@@ -270,10 +274,10 @@ hr {
   text-align: center;
   top: -2px;
   border-radius: 6px;
-  background: #d6dbf5d0;
+  background: #5d616452;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   color: #293264;
   transition: transform 0.1s ease-in-out;
 }
@@ -318,7 +322,7 @@ hr {
 }
 
 .loading-spinner {
-  height: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -330,4 +334,29 @@ hr {
   font-weight: 600;
   color: #293264;
   margin-left: 1.2em;
+}
+
+@media (max-width: 500px) {
+  .start-container h1 {
+    color: #293264;
+    font-size: 2.3rem;
+    margin: 0.1em;
+  }
+
+  .start-btn {
+    margin: 3em auto;
+    width: 8em;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: .6em 0.3em;
+  }
+
+  .level,
+  .category {
+    width: 80%;
+    padding: 1em 0.3em;
+    text-align: center;
+    top: -2px;
+  }
+
 }

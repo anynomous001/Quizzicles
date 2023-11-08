@@ -3,8 +3,9 @@ import React from 'react';
 import './App.css';
 import Questions from './Questions';
 import { nanoid } from 'nanoid';
-import { shuffleArray, LoadingSpinner } from './utils'
-import { options } from './topicoptions'
+import { shuffleArray } from './utils'
+import { LoadingSpinner } from './Spinner'
+import { options } from './constants'
 import { QuizReducer, Initial_State } from './QuizReducer';
 
 
