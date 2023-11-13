@@ -37,7 +37,13 @@ function App() {
       throw error; // Re-throw the error
     }
   }
-
+  const delay = ((callback, time) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(callback())
+      }, time);
+    })
+  });
 
 
 
@@ -51,8 +57,8 @@ function App() {
     const category = e.target.category.value
     const level = e.target.level.value
 
-    setTimeout(async () => {
-      try {
+    try {
+      await delay(async () => {
         const questions = await fetchQuestions(category, level);
         setError(null); // Clear any previous errors
         setQuestions(() => {
@@ -80,12 +86,12 @@ function App() {
               selectedAnswerId: null,
             };
           });
-        });
-      } catch (error) {
-        setError(error.message); // Set the error message
-      }
-      dispatch({ type: 'Fetching-success' }); // Mark loading as completed
-    }, 2000);
+        })
+        dispatch({ type: 'Fetching-success' })
+      }, 1500);
+    } catch (error) {
+      setError(error.message); // Set the error message
+    }
   };
 
   const selectAnswer = (selectedQuestionId, selectedAnswerId) => {
