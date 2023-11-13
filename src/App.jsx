@@ -34,7 +34,7 @@ function App() {
 
       return data.results;
     } catch (error) {
-      throw error; // Re-throw the error
+      throw error;
     }
   }
   const delay = ((callback, time) => {

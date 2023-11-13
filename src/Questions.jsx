@@ -2,6 +2,101 @@ import React from 'react'
 import './App.css'
 import { nanoid } from 'nanoid';
 
+const Questions = ({ error, start, dispatch, state, questions, selectAnswer }) => {
+
+    const [correctAnswers, setCorrectAnswers] = React.useState({});
+    const [wrongAnswers, setWrongAnswers] = React.useState({});
+
+    const quizQuestions = questions?.map((question, questionIndex) => {
+
+        const isCorrect = correctAnswers[question.id];
+        const isWrong = wrongAnswers[question.id];
+
+
+        return (
+            <div className='quizes' key={questionIndex}>
+                <h3>{question.question}</h3>
+                <div className='answers-div'>
+                    {question.answers?.map((answer, index) => {
+
+                        const isAnswerSelected = answer.id === question.selectedAnswerId;
+                        const correctAnswer = answer.id === question.correctAnswerId
+
+                        return <button
+                            key={answer.id}
+                            id={answer.id}
+                            onClick={() => selectAnswer(question.id, answer.id)}
+                            disabled={state.answerChecked && !correctAnswer && !isAnswerSelected && true}
+                            className={`
+                            answer_span ${isAnswerSelected ? 'select' : ''}
+                             ${correctAnswer && state.answerChecked ? 'correct' : ''
+                                } ${isWrong && isAnswerSelected ? 'wrong' : ''}
+                                `}
+                        >{answer.value}</button>
+                    })}
+                </div>
+                <hr></hr>
+            </div>
+        )
+    })
+
+
+
+
+    function checkAnswers() {
+        dispatch({ type: 'Answer_checked' })
+
+
+        const correctAnswersObj = {};
+        const wrongAnswersObj = {};
+
+        questions.forEach((question) => {
+            console.log(question.correctAnswerId + '  *****  ' + question.selectedAnswerId)
+
+            if (question.selectedAnswerId === question.correctAnswerId) {
+                dispatch({ type: 'correct-answer' })
+
+                correctAnswersObj[question.id] = true;
+            } else {
+                wrongAnswersObj[question.id] = true;
+            }
+        });
+
+        setCorrectAnswers(correctAnswersObj);
+        setWrongAnswers(wrongAnswersObj);
+    }
+
+
+    return (
+
+        start.start &&
+
+        <div className='quiz-div'>
+            {error && <h1>{error}</h1>}
+            {!error && quizQuestions}
+
+            {!state.answerChecked && (
+                <button className="check-btn" onClick={checkAnswers}>Check Answer</button>
+            )}
+
+            {state.answerChecked &&
+                <>
+                    <button className={`play-again-btn`}
+                        onClick={() => {
+                            start.setStart(false);
+                            dispatch({ type: 'game-restarted' })
+                        }} key={nanoid()} >Play Again</button>
+
+                    <h3 className='score-msg'>You got <span className='score'>{state.count}/{questions.length}</span> Correct Answers</h3>
+                </>
+
+            }
+        </div >
+
+    )
+}
+export default Questions;
+
 // How to determine which one to use: useState OR useReducer
 // useReducer ---> If you have states which are "coupled together"/"depend on each other"
 // useState --->  When you states are not depending on each other, can live separately (in any other cases)
@@ -111,12 +206,12 @@ import { nanoid } from 'nanoid';
 
 
 /*ShuffleArray function for Shuffling correct and incorrect answers
-    
+
 answers: (4) ['Notebook', 'Money', 'Watch', 'Keys']
 correctAnswer: "Watch"
 id: "SX9AnH7pckZXpCr2zeJiy"
 question: "In past times, what would a gentleman keep in his fob pocket?"
- 
+
 */
 
 
@@ -132,7 +227,7 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
              [questionIndex]: userSelectedAnsId,
          }
      }
- 
+
  })*/
 
 // setSelectedAnswers((prevAnswers) => {
@@ -150,100 +245,3 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 //     }
 // });
 // console.log(selectedAnswers)
-
-
-const Questions = ({ error, start, dispatch, state, questions, selectAnswer }) => {
-
-    const [correctAnswers, setCorrectAnswers] = React.useState({});
-    const [wrongAnswers, setWrongAnswers] = React.useState({});
-
-    const quizQuestions = questions?.map((question, questionIndex) => {
-
-        const isCorrect = correctAnswers[question.id];
-        const isWrong = wrongAnswers[question.id];
-
-
-        return (
-            <div className='quizes' key={questionIndex}>
-                <h3>{question.question}</h3>
-                <div className='answers-div'>
-                    {question.answers?.map((answer, index) => {
-
-                        const isAnswerSelected = answer.id === question.selectedAnswerId;
-                        const correctAnswer = answer.id === question.correctAnswerId
-
-                        return <button
-                            key={answer.id}
-                            id={answer.id}
-                            onClick={() => selectAnswer(question.id, answer.id)}
-                            disabled={state.answerChecked && !correctAnswer && !isAnswerSelected && true}
-                            className={`
-                            answer_span ${isAnswerSelected ? 'select' : ''}
-                             ${correctAnswer && state.answerChecked ? 'correct' : ''
-                                } ${isWrong && isAnswerSelected ? 'wrong' : ''}
-                                `}
-                        >{answer.value}</button>
-                    })}
-                </div>
-                <hr></hr>
-            </div>
-        )
-    })
-
-
-
-
-    function checkAnswers() {
-        dispatch({ type: 'Answer_checked' })
-
-
-        const correctAnswersObj = {};
-        const wrongAnswersObj = {};
-
-        questions.forEach((question) => {
-            console.log(question.correctAnswerId + '  *****  ' + question.selectedAnswerId)
-
-            if (question.selectedAnswerId === question.correctAnswerId) {
-                dispatch({ type: 'correct-answer' })
-
-                correctAnswersObj[question.id] = true;
-            } else {
-                wrongAnswersObj[question.id] = true;
-            }
-        });
-
-        setCorrectAnswers(correctAnswersObj);
-        setWrongAnswers(wrongAnswersObj);
-    }
-
-
-    return (
-
-        start.start &&
-
-        <div className='quiz-div'>
-            {error && <h1>{error}</h1>}
-            {!error && quizQuestions}
-
-            {!state.answerChecked && (
-                <button className="check-btn" onClick={checkAnswers}>Check Answer</button>
-            )}
-
-            {state.answerChecked &&
-                <>
-                    <button className={`play-again-btn`}
-                        onClick={() => {
-                            start.setStart(false);
-                            dispatch({ type: 'game-restarted' })
-                        }} key={nanoid()} >Play Again</button>
-
-                    <h3 className='score-msg'>You got <span className='score'>{state.count}/{questions.length}</span> Correct Answers</h3>
-                </>
-
-            }
-        </div >
-
-    )
-}
-export default Questions;
-
