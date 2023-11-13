@@ -1,7 +1,6 @@
 import React from 'react'
 import './App.css'
 import { nanoid } from 'nanoid';
-import { QuizReducer, Initial_State } from './QuizReducer';
 
 // How to determine which one to use: useState OR useReducer
 // useReducer ---> If you have states which are "coupled together"/"depend on each other"
@@ -153,9 +152,8 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 // console.log(selectedAnswers)
 
 
-const Questions = ({ error, start, loading, questions, selectAnswer }) => {
+const Questions = ({ error, start, dispatch, state, questions, selectAnswer }) => {
 
-    const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
     const [correctAnswers, setCorrectAnswers] = React.useState({});
     const [wrongAnswers, setWrongAnswers] = React.useState({});
 
@@ -203,6 +201,8 @@ const Questions = ({ error, start, loading, questions, selectAnswer }) => {
         const wrongAnswersObj = {};
 
         questions.forEach((question) => {
+            console.log(question.correctAnswerId + '  *****  ' + question.selectedAnswerId)
+
             if (question.selectedAnswerId === question.correctAnswerId) {
                 dispatch({ type: 'correct-answer' })
 
@@ -222,7 +222,6 @@ const Questions = ({ error, start, loading, questions, selectAnswer }) => {
         start.start &&
 
         <div className='quiz-div'>
-            {loading && <p>Loading....</p>}
             {error && <h1>{error}</h1>}
             {!error && quizQuestions}
 

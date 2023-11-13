@@ -139,7 +139,8 @@ function App() {
               questions={questions}
               start={{ start, setStart }}
 
-
+              state={state}
+              dispatch={dispatch}
               loading={state.loading}
               selectAnswer={selectAnswer}
             />
