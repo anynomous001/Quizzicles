@@ -90,7 +90,7 @@ function App() {
         dispatch({ type: 'Fetching-success' })
       }, 1500);
     } catch (error) {
-      setError(error.message); // Set the error message
+      setError(error.message);
     }
   };
 

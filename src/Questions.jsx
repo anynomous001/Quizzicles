@@ -1,37 +1,42 @@
 import React from 'react'
 import './App.css'
 import { nanoid } from 'nanoid';
+import classNames from 'classnames'
 
 const Questions = ({ error, start, dispatch, state, questions, selectAnswer }) => {
 
-    const [correctAnswers, setCorrectAnswers] = React.useState({});
-    const [wrongAnswers, setWrongAnswers] = React.useState({});
 
     const quizQuestions = questions?.map((question, questionIndex) => {
 
-        const isCorrect = correctAnswers[question.id];
-        const isWrong = wrongAnswers[question.id];
 
 
         return (
             <div className='quizes' key={questionIndex}>
                 <h3>{question.question}</h3>
                 <div className='answers-div'>
-                    {question.answers?.map((answer, index) => {
+                    {question.answers?.map((answer) => {
 
-                        const isAnswerSelected = answer.id === question.selectedAnswerId;
-                        const correctAnswer = answer.id === question.correctAnswerId
+                        const isSelected = question.selectedAnswerId === answer.id
+                        const isCorrect = question.correctAnswerId === question.selectedAnswerId && question.selectedAnswerId === answer.id
+
+
+
+                        const classNameList = [
+                            'answer_span',
+                            isSelected ? 'select' : null,
+                            state.answerChecked && isCorrect ? 'correct' : '',
+                            isSelected && state.answerChecked && !isCorrect ? 'wrong' : ''
+                        ]
+
+                        const classNames = classNameList.filter(Boolean).join(" ")
+
 
                         return <button
                             key={answer.id}
                             id={answer.id}
                             onClick={() => selectAnswer(question.id, answer.id)}
-                            disabled={state.answerChecked && !correctAnswer && !isAnswerSelected && true}
-                            className={`
-                            answer_span ${isAnswerSelected ? 'select' : ''}
-                             ${correctAnswer && state.answerChecked ? 'correct' : ''
-                                } ${isWrong && isAnswerSelected ? 'wrong' : ''}
-                                `}
+                            disabled={state.answerChecked && !isSelected && true}
+                            className={classNames}
                         >{answer.value}</button>
                     })}
                 </div>
@@ -45,25 +50,12 @@ const Questions = ({ error, start, dispatch, state, questions, selectAnswer }) =
 
     function checkAnswers() {
         dispatch({ type: 'Answer_checked' })
-
-
-        const correctAnswersObj = {};
-        const wrongAnswersObj = {};
-
         questions.forEach((question) => {
-            console.log(question.correctAnswerId + '  *****  ' + question.selectedAnswerId)
-
             if (question.selectedAnswerId === question.correctAnswerId) {
                 dispatch({ type: 'correct-answer' })
-
-                correctAnswersObj[question.id] = true;
-            } else {
-                wrongAnswersObj[question.id] = true;
             }
         });
 
-        setCorrectAnswers(correctAnswersObj);
-        setWrongAnswers(wrongAnswersObj);
     }
 
 
