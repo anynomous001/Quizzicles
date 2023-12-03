@@ -1,7 +1,93 @@
 import React from 'react'
 import './App.css'
 import { nanoid } from 'nanoid';
-import { QuizReducer, Initial_State } from './QuizReducer';
+import classNames from 'classnames'
+
+const Questions = ({ error, start, dispatch, state, questions, selectAnswer }) => {
+
+
+    const quizQuestions = questions?.map((question, questionIndex) => {
+
+
+
+        return (
+            <div className='quizes' key={questionIndex}>
+                <h3>{question.question}</h3>
+                <div className='answers-div'>
+                    {question.answers?.map((answer) => {
+
+                        const isSelected = question.selectedAnswerId === answer.id
+                        const isCorrect = question.correctAnswerId === question.selectedAnswerId && question.selectedAnswerId === answer.id
+
+
+
+                        const classNameList = [
+                            'answer_span',
+                            isSelected ? 'select' : null,
+                            state.answerChecked && isCorrect ? 'correct' : '',
+                            isSelected && state.answerChecked && !isCorrect ? 'wrong' : ''
+                        ]
+
+                        const classNames = classNameList.filter(Boolean).join(" ")
+
+
+                        return <button
+                            key={answer.id}
+                            id={answer.id}
+                            onClick={() => selectAnswer(question.id, answer.id)}
+                            disabled={state.answerChecked && !isSelected && true}
+                            className={classNames}
+                        >{answer.value}</button>
+                    })}
+                </div>
+                <hr></hr>
+            </div>
+        )
+    })
+
+
+
+
+    function checkAnswers() {
+        dispatch({ type: 'Answer_checked' })
+        questions.forEach((question) => {
+            if (question.selectedAnswerId === question.correctAnswerId) {
+                dispatch({ type: 'correct-answer' })
+            }
+        });
+
+    }
+
+
+    return (
+
+        start.start &&
+
+        <div className='quiz-div'>
+            {error && <h1>{error}</h1>}
+            {!error && quizQuestions}
+
+            {!state.answerChecked && (
+                <button className="check-btn" onClick={checkAnswers}>Check Answer</button>
+            )}
+
+            {state.answerChecked &&
+                <>
+                    <button className={`play-again-btn`}
+                        onClick={() => {
+                            start.setStart(false);
+                            dispatch({ type: 'game-restarted' })
+                        }} key={nanoid()} >Play Again</button>
+
+                    <h3 className='score-msg'>You got <span className='score'>{state.count}/{questions.length}</span> Correct Answers</h3>
+                </>
+
+            }
+        </div >
+
+    )
+}
+export default Questions;
 
 // How to determine which one to use: useState OR useReducer
 // useReducer ---> If you have states which are "coupled together"/"depend on each other"
@@ -112,12 +198,12 @@ import { QuizReducer, Initial_State } from './QuizReducer';
 
 
 /*ShuffleArray function for Shuffling correct and incorrect answers
-    
+
 answers: (4) ['Notebook', 'Money', 'Watch', 'Keys']
 correctAnswer: "Watch"
 id: "SX9AnH7pckZXpCr2zeJiy"
 question: "In past times, what would a gentleman keep in his fob pocket?"
- 
+
 */
 
 
@@ -133,7 +219,7 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
              [questionIndex]: userSelectedAnsId,
          }
      }
- 
+
  })*/
 
 // setSelectedAnswers((prevAnswers) => {
@@ -151,100 +237,3 @@ question: "In past times, what would a gentleman keep in his fob pocket?"
 //     }
 // });
 // console.log(selectedAnswers)
-
-
-const Questions = ({ error, start, loading, questions, selectAnswer }) => {
-
-    const [state, dispatch] = React.useReducer(QuizReducer, Initial_State)
-    const [correctAnswers, setCorrectAnswers] = React.useState({});
-    const [wrongAnswers, setWrongAnswers] = React.useState({});
-
-    const quizQuestions = questions?.map((question, questionIndex) => {
-
-        const isCorrect = correctAnswers[question.id];
-        const isWrong = wrongAnswers[question.id];
-
-
-        return (
-            <div className='quizes' key={questionIndex}>
-                <h3>{question.question}</h3>
-                <div className='answers-div'>
-                    {question.answers?.map((answer, index) => {
-
-                        const isAnswerSelected = answer.id === question.selectedAnswerId;
-                        const correctAnswer = answer.id === question.correctAnswerId
-
-                        return <button
-                            key={answer.id}
-                            id={answer.id}
-                            onClick={() => selectAnswer(question.id, answer.id)}
-                            disabled={state.answerChecked && !correctAnswer && !isAnswerSelected && true}
-                            className={`
-                            answer_span ${isAnswerSelected ? 'select' : ''}
-                             ${correctAnswer && state.answerChecked ? 'correct' : ''
-                                } ${isWrong && isAnswerSelected ? 'wrong' : ''}
-                                `}
-                        >{answer.value}</button>
-                    })}
-                </div>
-                <hr></hr>
-            </div>
-        )
-    })
-
-
-
-
-    function checkAnswers() {
-        dispatch({ type: 'Answer_checked' })
-
-
-        const correctAnswersObj = {};
-        const wrongAnswersObj = {};
-
-        questions.forEach((question) => {
-            if (question.selectedAnswerId === question.correctAnswerId) {
-                dispatch({ type: 'correct-answer' })
-
-                correctAnswersObj[question.id] = true;
-            } else {
-                wrongAnswersObj[question.id] = true;
-            }
-        });
-
-        setCorrectAnswers(correctAnswersObj);
-        setWrongAnswers(wrongAnswersObj);
-    }
-
-
-    return (
-
-        start.start &&
-
-        <div className='quiz-div'>
-            {loading && <p>Loading....</p>}
-            {error && <h1>{error}</h1>}
-            {!error && quizQuestions}
-
-            {!state.answerChecked && (
-                <button className="check-btn" onClick={checkAnswers}>Check Answer</button>
-            )}
-
-            {state.answerChecked &&
-                <>
-                    <button className={`play-again-btn`}
-                        onClick={() => {
-                            start.setStart(false);
-                            dispatch({ type: 'game-restarted' })
-                        }} key={nanoid()} >Play Again</button>
-
-                    <h3 className='score-msg'>You got <span className='score'>{state.count}/{questions.length}</span> Correct Answers</h3>
-                </>
-
-            }
-        </div >
-
-    )
-}
-export default Questions;
-

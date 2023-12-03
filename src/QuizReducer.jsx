@@ -30,7 +30,8 @@ export const QuizReducer = (state, action) => {
             return {
                 ...state,
                 loading: false,
-                answerChecked: false
+                answerChecked: false,
+                count: 0
             };
         default: return state;
     }
